@@ -35,12 +35,13 @@ const SideNav = () => {
   }, []);
 
   return (
-    <nav className="fixed left-0 top-0 h-full z-30 hidden md:flex flex-col justify-center pl-6 lg:pl-10">
+    <nav style={{ pointerEvents: "none" }} className="fixed left-0 top-0 h-full z-30 hidden md:flex flex-col justify-center pl-6 lg:pl-10">
       <ul className="space-y-4">
         {navItems.map((item) => (
           <li key={item.id}>
             <a
               href={`#${item.id}`}
+              style={{ pointerEvents: "auto" }}
               className={`block text-xs tracking-wide transition-colors ${
                 active === item.id
                   ? "text-primary font-bold border-l-2 border-primary pl-3"
