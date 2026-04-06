@@ -664,7 +664,7 @@ const Index = () => {
       <SideNav />
       <MobileNav />
 
-      <div className="md:pl-48 lg:pl-56">
+      <div className="md:pl-48 lg:pl-56 relative" style={{ zIndex: 3 }}>
         <HeroSection />
         <AboutSection />
         <RolesSection />
