@@ -72,8 +72,9 @@ const HeroSection = () => (
           <Linkedin className="h-8 w-8" />
           <span className="text-[9px] tracking-widest">COMING SOON</span>
         </span>
-        <a href="https://github.com/PanshulVempalli" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors">
+        <a href="https://github.com/PanshulVempalli" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors flex flex-col items-center gap-1">
           <Github className="h-8 w-8" />
+          <span className="text-[9px] tracking-widest">GITHUB</span>
         </a>
       </div>
 
@@ -525,7 +526,7 @@ const Footer = () => (
       </p>
     </div>
     <p className="text-[10px] text-muted-foreground">
-      © 2025 Panshul Vempalli — Personal Portfolio
+      © 2026 Panshul Vempalli — All Rights Reserved
     </p>
   </footer>
 );
