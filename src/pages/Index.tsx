@@ -66,10 +66,11 @@ const HeroSection = () => (
     <div className="text-center max-w-2xl">
       {/* Social icons */}
       <div className="flex justify-center gap-6 mb-8">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors">
+        <span title="Coming soon!" className="text-muted-foreground cursor-default flex flex-col items-center gap-1">
           <Linkedin className="h-8 w-8" />
-        </a>
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors">
+          <span className="text-[9px] tracking-widest">COMING SOON</span>
+        </span>
+        <a href="https://github.com/PanshulVempalli" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors">
           <Github className="h-8 w-8" />
         </a>
       </div>
@@ -94,9 +95,12 @@ const HeroSection = () => (
       </p>
       <div className="border-t border-border w-64 mx-auto mt-3" />
 
-      <p className="text-xs text-muted-foreground mt-8 animate-pulse">
-        Scroll Down
-      </p>
+      <button
+        onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
+        className="text-xs text-muted-foreground mt-8 animate-pulse hover:text-primary transition-colors cursor-pointer bg-transparent border-none"
+      >
+        ↓ Scroll Down ↓
+      </button>
     </div>
   </section>
 );
@@ -129,12 +133,22 @@ const roles = [
   {
     title: "Lead Programmer",
     type: "Robotics",
-    period: "2024 — Present",
-    org: "VEX Robotics Team",
+    period: "2025 — Present",
+    org: "VEX Robotics Team — Habs Gliders",
     details: [
       "Designing and programming autonomous routines with PID controllers",
       "Integrating V5 sensors for consistent 180° turns (±2° accuracy)",
       "Writing efficient C++ for real-time embedded control",
+    ],
+  },
+  {
+    title: "Team Member",
+    type: "Engineering",
+    period: "2024 — Present",
+    org: "Greenpower — HABS Powerstrike",
+    details: [
+      "Building and racing an electric car in the Greenpower F24+ competition",
+      "Contributing to vehicle electronics and performance optimisation",
     ],
   },
   {
@@ -279,7 +293,7 @@ const SkillsSection = () => (
           <h3 className="text-sm font-bold text-foreground mb-3">&gt; {category}</h3>
           <div className="space-y-1 pl-4">
             {items.map((skill) => (
-              <div key={skill.name} className="flex items-center justify-between text-xs">
+              <div key={skill.name} className="flex items-center gap-3 text-xs">
                 <span className="text-muted-foreground">— {skill.name}</span>
                 {"level" in skill && skill.level && (
                   <span className={`text-[10px] px-2 py-0.5 border ${
@@ -310,13 +324,13 @@ const ContactSection = () => (
 
       <div className="space-y-2 text-sm">
         <p className="text-muted-foreground">
-          email: <a href="mailto:panshul@example.com" className="text-primary hover:underline">panshul@example.com</a>
+          email: <a href="mailto:panshulvempalli@gmail.com" className="text-primary hover:underline">panshulvempalli@gmail.com</a>
         </p>
         <p className="text-muted-foreground">
-          github: <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">github.com/panshul</a>
+          github: <a href="https://github.com/PanshulVempalli" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">github.com/PanshulVempalli</a>
         </p>
         <p className="text-muted-foreground">
-          linkedin: <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">linkedin.com/in/panshul</a>
+          linkedin: <span className="text-muted-foreground italic text-xs">Coming soon</span>
         </p>
       </div>
 
