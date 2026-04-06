@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin, ExternalLink } from "lucide-react";
 
 const navItems = [
   { label: "Home", id: "home" },
@@ -7,6 +7,7 @@ const navItems = [
   { label: "Roles", id: "roles" },
   { label: "Projects", id: "projects" },
   { label: "Skills", id: "skills" },
+  { label: "What's Next", id: "next" },
   { label: "Contact Me", id: "contact" },
 ];
 
@@ -91,7 +92,7 @@ const HeroSection = () => (
 
       <div className="border-t border-border w-64 mx-auto mb-3" />
       <p className="text-sm text-muted-foreground">
-        &gt; Aspiring Robotics & Visual Computing Engineer
+        &gt; Aspiring Robotics & Visual Computing Engineer<span className="cursor-blink text-primary ml-0.5">_</span>
       </p>
       <div className="border-t border-border w-64 mx-auto mt-3" />
 
@@ -117,8 +118,8 @@ const AboutSection = () => (
       <p className="text-sm leading-relaxed text-foreground">
         &gt;&gt; As Lead Programmer for my VEX Robotics team and Software Lead for CanSat, 
         I specialise in PID control, sensor fusion, and writing efficient C++ for 
-        embedded systems. I'm targeting a degree in Computing (Visual Computing & Robotics) 
-        at Imperial College London.
+        embedded systems. I'm targeting a degree in Computing (Visual Computing & Robotics)
+        at a top UK university.
       </p>
       <p className="text-sm leading-relaxed text-foreground">
         &gt;&gt; I'm actively seeking summer shadowing opportunities in Computer Vision labs 
@@ -135,6 +136,7 @@ const roles = [
     type: "Robotics",
     period: "2025 — Present",
     org: "VEX Robotics Team — Habs Gliders",
+    orgLink: "https://habs-gliders-34071b.vercel.app/",
     details: [
       "Designing and programming autonomous routines with PID controllers",
       "Integrating V5 sensors for consistent 180° turns (±2° accuracy)",
@@ -146,6 +148,7 @@ const roles = [
     type: "Engineering",
     period: "2024 — Present",
     org: "Greenpower — HABS Powerstrike",
+    orgLink: "https://habspowerstrike.odoo.com",
     details: [
       "Building and racing an electric car in the Greenpower F24+ competition",
       "Contributing to vehicle electronics and performance optimisation",
@@ -154,19 +157,11 @@ const roles = [
   {
     title: "Software Lead",
     type: "Competition",
-    period: "2025 — Present",
+    period: "2026 — Present",
     org: "CanSat Team",
     details: [
       "Developing atmospheric data collection and telemetry systems",
       "Programming Arduino-based sensor arrays for descent data logging",
-    ],
-  },
-  {
-    title: "Seeking Summer 2026 Shadowing",
-    type: "Work Experience",
-    period: "Target: July 2026",
-    details: [
-      "Targeting placements in Computer Vision labs at Imperial College London and Brunel University",
     ],
   },
 ];
@@ -176,7 +171,7 @@ const RolesSection = () => (
     <SectionHeader title="ROLES" />
     <div className="max-w-2xl mx-auto space-y-8">
       {roles.map((role) => (
-        <div key={role.title} className="border-l-2 border-border pl-4 hover:border-primary transition-colors">
+        <div key={role.title} className="card-hover border border-border border-l-2 border-l-border pl-4 pr-3 py-3 transition-colors">
           <div className="flex items-start justify-between flex-wrap gap-2 mb-1">
             <h3 className="text-sm font-bold text-foreground">&gt; {role.title}</h3>
             <div className="flex gap-2">
@@ -189,7 +184,13 @@ const RolesSection = () => (
             </div>
           </div>
           {role.org && (
-            <p className="text-xs text-primary mb-2">{role.org}</p>
+            <p className="text-xs text-primary mb-2">
+              {role.orgLink ? (
+                <a href={role.orgLink} target="_blank" rel="noopener noreferrer" className="hover:underline underline-offset-4">
+                  {role.org}
+                </a>
+              ) : role.org}
+            </p>
           )}
           <ul className="space-y-1">
             {role.details.map((d, i) => (
@@ -202,30 +203,141 @@ const RolesSection = () => (
   </section>
 );
 
+const futureGoals = [
+  {
+    title: "Arkwright Engineering Scholarship",
+    type: "Scholarship",
+    period: "Applying 2026",
+    org: "Arkwright Scholarships Trust",
+    details: [
+      "One of the UK's most prestigious engineering scholarships for sixth-form students",
+      "Preparing technical aptitude and application through Haberdashers' Boys' School",
+    ],
+  },
+  {
+    title: "CREST Award — Silver",
+    type: "Award",
+    period: "2025 — Present",
+    org: "British Science Association",
+    details: [
+      "Conducting an independent STEM research project to Silver level",
+      "Documenting methodology, results, and conclusions in a formal report",
+    ],
+  },
+  {
+    title: "Physics Olympiad",
+    type: "Competition",
+    period: "2026",
+    org: "British Physics Olympiad (BPhO)",
+    details: [
+      "Signed up and preparing with past papers and extended problem sets",
+    ],
+  },
+  {
+    title: "Summer Lab Shadowing",
+    type: "Work Experience",
+    period: "Target: July 2026",
+    details: [
+      "Actively reaching out to UK universities and research groups",
+      "Targeting Computer Vision and Robotics labs",
+      "Also exploring IET-supported placements",
+    ],
+  },
+];
+
+const NextSection = () => (
+  <section id="next" className="py-16 px-4">
+    <SectionHeader title="WHAT'S NEXT" />
+    <div className="max-w-2xl mx-auto">
+      <p className="text-xs text-muted-foreground mb-8 text-center">
+        &gt;&gt; These are the goals and challenges I'm actively working towards. Follow along — this page updates as I go.
+      </p>
+      <div className="space-y-8">
+        {futureGoals.map((goal) => (
+          <div key={goal.title} className="border-l-2 border-dashed border-border pl-4 hover:border-primary transition-colors">
+            <div className="flex items-start justify-between flex-wrap gap-2 mb-1">
+              <h3 className="text-sm font-bold text-foreground">&gt; {goal.title}</h3>
+              <div className="flex gap-2">
+                <span className="text-[10px] text-primary border border-primary px-2 py-0.5">
+                  {goal.type}
+                </span>
+                <span className="text-[10px] text-muted-foreground border border-border px-2 py-0.5">
+                  {goal.period}
+                </span>
+              </div>
+            </div>
+            {goal.org && (
+              <p className="text-xs text-primary mb-2">{goal.org}</p>
+            )}
+            <ul className="space-y-1">
+              {goal.details.map((d, i) => (
+                <li key={i} className="text-xs text-muted-foreground">— {d}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p className="text-[10px] text-muted-foreground text-center mt-10 animate-pulse">
+        &gt; bookmark this page and check back as things develop _
+      </p>
+    </div>
+  </section>
+);
+
 const projects = [
   {
-    title: "VEX Robotics — PID Controller",
+    title: "Habs Gliders — Team Website",
+    type: "Web",
+    period: "2025",
+    description: "Built and deployed the official website for VEX Robotics Team Habs Gliders 34071B. Full React app with Vite and Tailwind, live on Vercel.",
+    stack: ["TypeScript", "React", "Tailwind CSS", "Vite"],
+    status: "Live",
+    link: "https://github.com/PanshulVempalli/habs-gliders-34071b",
+  },
+  {
+    title: "JAR Template — VEX Competition Code",
     type: "Robotics",
-    period: "2024",
-    description: "Designed a PID controller for consistent 180° turns and autonomous routines using V5 sensors. Achieved ±2° accuracy on autonomous turns at regional competition.",
-    stack: ["C++", "V5 Brain", "PID", "Sensor Fusion"],
+    period: "2025",
+    description: "Competition C++ codebase for the PushBack season using the JAR (Jackson Area Robotics) template framework. Implements PID tuning with an inertial sensor (IMU) for accurate autonomous routines.",
+    stack: ["C++", "JAR Template", "PID", "IMU"],
     status: "Complete",
+    link: "https://github.com/PanshulVempalli/JAR-template-Example-VEX-Code",
+  },
+  {
+    title: "VEX V5 — Prematch Auton Example",
+    type: "Robotics",
+    period: "2025",
+    description: "Open-source base autonomous routine for the VEX V5 Pushback season. Designed as a beginner-friendly starting point for teams building their first auton — no sensors or PID required.",
+    stack: ["Python", "VEX V5", "Autonomous"],
+    status: "Complete",
+    link: "https://github.com/PanshulVempalli/VEX-V5-Prematch-Auton-Example-",
+  },
+  {
+    title: "VEX V5 — Python Skills Auton",
+    type: "Robotics",
+    period: "2025",
+    description: "Foundational skills autonomous program for the Pushback season. Published as an educational resource for teams starting out with Python on VEX V5.",
+    stack: ["Python", "VEX V5", "Skills Run"],
+    status: "Complete",
+    link: "https://github.com/PanshulVempalli/VEX-V5-Python-Skills-Auton-Example",
+  },
+  {
+    title: "Choose Your Level",
+    type: "Web",
+    period: "2025",
+    description: "Interactive web app to help students aged 16–18 decide which A-level subjects to pick. Built independently and deployed live.",
+    stack: ["TypeScript", "React", "shadcn/ui", "Tailwind"],
+    status: "Live",
+    link: "https://chooseyouralevel.lovable.app",
   },
   {
     title: "CanSat — Atmospheric Data Relay",
     type: "Competition",
     period: "Ongoing",
-    description: "Building a satellite the size of a soda can to collect and transmit atmospheric data during descent.",
+    description: "Building a satellite the size of a soda can to collect and transmit atmospheric data during descent. Part of the national CanSat competition.",
     stack: ["Python", "Arduino", "Telemetry", "Data Logging"],
     status: "In Progress",
-  },
-  {
-    title: "C++ Deep Dive — Data Structures",
-    type: "Personal",
-    period: "Ongoing",
-    description: "Teaching myself advanced C++ through implementing data structures and algorithms from scratch.",
-    stack: ["C++", "STL", "Memory Management"],
-    status: "In Progress",
+    link: null,
   },
 ];
 
@@ -234,26 +346,47 @@ const ProjectsSection = () => (
     <SectionHeader title="PROJECTS" />
     <div className="max-w-2xl mx-auto space-y-8">
       {projects.map((project) => (
-        <div key={project.title} className="border-l-2 border-border pl-4 hover:border-primary transition-colors">
+        <div key={project.title} className="card-hover border border-border border-l-2 border-l-border pl-4 pr-3 py-3 transition-colors">
           <div className="flex items-start justify-between flex-wrap gap-2 mb-1">
-            <h3 className="text-sm font-bold text-foreground">&gt; {project.title}</h3>
-            <div className="flex gap-2">
+            <h3 className="text-sm font-bold text-foreground">
+              &gt;{" "}
+              {project.link ? (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary transition-colors hover:underline underline-offset-4"
+                >
+                  {project.title}
+                </a>
+              ) : (
+                project.title
+              )}
+            </h3>
+            <div className="flex gap-2 items-center">
               <span className="text-[10px] text-muted-foreground border border-border px-2 py-0.5">
                 {project.type}
               </span>
               <span className={`text-[10px] px-2 py-0.5 border ${
                 project.status === "In Progress"
                   ? "text-primary border-primary"
+                  : project.status === "Live"
+                  ? "text-green-600 border-green-600"
                   : "text-muted-foreground border-border"
               }`}>
-                {project.status}
+                {project.status === "Live" ? "● Live" : project.status}
               </span>
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              )}
             </div>
           </div>
           <p className="text-xs text-muted-foreground mb-3 leading-relaxed">{project.description}</p>
           <div className="flex flex-wrap gap-2">
             {project.stack.map((tech) => (
-              <span key={tech} className="text-[10px] text-foreground bg-secondary px-2 py-0.5">
+              <span key={tech} className="text-[10px] text-foreground bg-secondary px-2 py-0.5 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">
                 {tech}
               </span>
             ))}
@@ -264,51 +397,79 @@ const ProjectsSection = () => (
   </section>
 );
 
-const skills = {
-  Languages: [
-    { name: "C++", level: "Intermediate" },
-    { name: "Python", level: "Proficient" },
-    { name: "HTML/CSS", level: "Proficient" },
-  ],
-  Tools: [
-    { name: "Git / GitHub" },
-    { name: "VS Code" },
-    { name: "VEX V5 Brain" },
-    { name: "Arduino IDE" },
-  ],
-  Concepts: [
-    { name: "PID Control Loops" },
-    { name: "Sensor Fusion" },
-    { name: "Computer Vision", level: "Learning" },
-    { name: "Data Structures", level: "Learning" },
-  ],
-};
+const languages = [
+  { name: "C++",      bars: 6, total: 10, level: "Intermediate" },
+  { name: "Python",   bars: 8, total: 10, level: "Proficient" },
+  { name: "HTML/CSS", bars: 8, total: 10, level: "Proficient" },
+];
+
+const tools = [
+  "Git / GitHub", "VS Code", "VEX V5 Brain", "Arduino IDE", "Linux CLI", "Fusion 360",
+];
+
+const concepts = [
+  { name: "PID Control Loops", status: "Active" },
+  { name: "Sensor Fusion",     status: "Active" },
+  { name: "Embedded C++",      status: "Active" },
+  { name: "Telemetry Systems", status: "Active" },
+  { name: "Computer Vision",   status: "Learning" },
+  { name: "Data Structures",   status: "Learning" },
+];
 
 const SkillsSection = () => (
   <section id="skills" className="py-16 px-4">
     <SectionHeader title="SKILLS" />
-    <div className="max-w-2xl mx-auto space-y-8">
-      {Object.entries(skills).map(([category, items]) => (
-        <div key={category}>
-          <h3 className="text-sm font-bold text-foreground mb-3">&gt; {category}</h3>
-          <div className="space-y-1 pl-4">
-            {items.map((skill) => (
-              <div key={skill.name} className="flex items-center gap-3 text-xs">
-                <span className="text-muted-foreground">— {skill.name}</span>
-                {"level" in skill && skill.level && (
-                  <span className={`text-[10px] px-2 py-0.5 border ${
-                    skill.level === "Learning"
-                      ? "text-primary border-primary"
-                      : "text-muted-foreground border-border"
-                  }`}>
-                    {skill.level}
-                  </span>
-                )}
+    <div className="max-w-2xl mx-auto space-y-10">
+
+      {/* Languages */}
+      <div>
+        <h3 className="text-sm font-bold text-foreground mb-4">&gt; Languages</h3>
+        <div className="space-y-3 pl-4">
+          {languages.map((lang) => (
+            <div key={lang.name} className="space-y-1">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-foreground w-24">— {lang.name}</span>
+                <span className="font-mono text-[11px] tracking-widest text-foreground">
+                  {"█".repeat(lang.bars)}{"░".repeat(lang.total - lang.bars)}
+                </span>
+                <span className="text-[10px] text-muted-foreground w-24 text-right">{lang.level}</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
+      {/* Tools */}
+      <div>
+        <h3 className="text-sm font-bold text-foreground mb-4">&gt; Tools & Environments</h3>
+        <div className="pl-4 flex flex-wrap gap-2">
+          {tools.map((tool) => (
+            <span key={tool} className="text-[11px] text-muted-foreground border border-border px-3 py-1 hover:border-primary hover:text-foreground transition-colors">
+              {tool}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Concepts */}
+      <div>
+        <h3 className="text-sm font-bold text-foreground mb-4">&gt; Concepts</h3>
+        <div className="pl-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {concepts.map((c) => (
+            <div key={c.name} className="flex items-center justify-between border border-border px-3 py-2 hover:border-primary transition-colors">
+              <span className="text-xs text-muted-foreground">— {c.name}</span>
+              <span className={`text-[10px] px-2 py-0.5 border ${
+                c.status === "Learning"
+                  ? "text-primary border-primary"
+                  : "text-green-600 border-green-600"
+              }`}>
+                {c.status === "Learning" ? "Learning" : "● Active"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </div>
   </section>
 );
@@ -334,26 +495,109 @@ const ContactSection = () => (
         </p>
       </div>
 
-      {/* Current Goal widget */}
-      <div className="mt-12 border border-primary p-4 max-w-sm mx-auto text-left">
-        <p className="text-[10px] font-bold tracking-widest text-primary mb-2">CURRENT GOAL</p>
-        <p className="text-xs text-foreground leading-relaxed">
-          Securing a 3-day shadowing placement in a Computer Vision lab for July 2026.
-        </p>
+      {/* Goals widget */}
+      <div className="mt-12 border border-primary p-4 max-w-sm mx-auto text-left space-y-3">
+        <p className="text-[10px] font-bold tracking-widest text-primary mb-3">CURRENT GOALS</p>
+        {[
+          { label: "Work Experience", detail: "Reaching out to UK universities — in progress" },
+          { label: "Arkwright Scholarship", detail: "Preparing application for 2026" },
+          { label: "Physics Olympiad", detail: "Signed up — BPhO 2026" },
+          { label: "CREST Silver", detail: "Independent research project in progress" },
+        ].map((g) => (
+          <div key={g.label} className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-bold text-foreground">&gt; {g.label}</span>
+            <span className="text-[10px] text-muted-foreground pl-3">— {g.detail}</span>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 );
 
 const Footer = () => (
-  <footer className="py-8 text-center">
+  <footer className="py-12 text-center space-y-4">
+    <div className="border border-border max-w-md mx-auto px-6 py-4">
+      <p className="text-[10px] font-bold tracking-widest text-primary mb-2">// THIS IS JUST THE START</p>
+      <p className="text-[10px] text-muted-foreground leading-relaxed">
+        This is my personal portfolio — a living document that grows as I do.
+        More projects, awards, and experiences are in progress. Check back soon.
+      </p>
+    </div>
     <p className="text-[10px] text-muted-foreground">
-      _
-    </p>
-    <p className="text-[10px] text-muted-foreground mt-4">
-      © 2025 Panshul Vempalli — Built from scratch as a living portfolio.
+      © 2025 Panshul Vempalli — Personal Portfolio
     </p>
   </footer>
+);
+
+// size: "sm" | "md" | "lg"
+const bgGlyphs = [
+  // Left edge — small
+  { text: "//",      top: "180px",  left: "1.5%", size: "sm" },
+  { text: ">>",      top: "450px",  left: "2%",   size: "md" },
+  { text: "0x1F",    top: "750px",  left: "1.5%", size: "sm" },
+  { text: "___",     top: "1050px", left: "2%",   size: "md" },
+  { text: "&&",      top: "1320px", left: "1.5%", size: "lg" },
+  { text: "/*",      top: "1600px", left: "2%",   size: "sm" },
+  { text: "int",     top: "1880px", left: "1.5%", size: "md" },
+  { text: "==",      top: "2150px", left: "2%",   size: "lg" },
+  { text: ";;",      top: "2420px", left: "1.5%", size: "sm" },
+  { text: "ret",     top: "2700px", left: "2%",   size: "md" },
+  { text: "||",      top: "2980px", left: "1.5%", size: "lg" },
+  { text: "~/",      top: "3260px", left: "2%",   size: "sm" },
+  { text: "for",     top: "3540px", left: "1.5%", size: "md" },
+  { text: "0b0",     top: "3800px", left: "2%",   size: "sm" },
+  { text: "end",     top: "4050px", left: "1.5%", size: "lg" },
+  { text: "var",     top: "4300px", left: "2%",   size: "sm" },
+  { text: "<<",      top: "4600px", left: "1.5%", size: "md" },
+  { text: "try",     top: "4900px", left: "2%",   size: "sm" },
+  // Right edge
+  { text: "01101",   top: "90px",   left: "91%",  size: "sm" },
+  { text: "{ }",     top: "340px",  left: "90%",  size: "lg" },
+  { text: "0xFF",    top: "620px",  left: "91%",  size: "sm" },
+  { text: "</>",     top: "900px",  left: "90%",  size: "md" },
+  { text: "#!",      top: "1180px", left: "91%",  size: "lg" },
+  { text: "[]",      top: "1450px", left: "90%",  size: "sm" },
+  { text: "~>",      top: "1720px", left: "91%",  size: "md" },
+  { text: "0b1",     top: "2000px", left: "90%",  size: "lg" },
+  { text: ">>>",     top: "2280px", left: "91%",  size: "sm" },
+  { text: "null",    top: "2550px", left: "90%",  size: "md" },
+  { text: "err",     top: "2820px", left: "91%",  size: "lg" },
+  { text: "10110",   top: "3100px", left: "90%",  size: "sm" },
+  { text: "def",     top: "3370px", left: "91%",  size: "md" },
+  { text: "EOF",     top: "3640px", left: "90%",  size: "lg" },
+  { text: "sys",     top: "3900px", left: "91%",  size: "sm" },
+  { text: "0xAB",    top: "4200px", left: "90%",  size: "md" },
+  { text: "map",     top: "4500px", left: "91%",  size: "sm" },
+  { text: "done",    top: "4800px", left: "90%",  size: "lg" },
+  // Inner accents — slightly inset
+  { text: "::",      top: "600px",  left: "7%",   size: "md" },
+  { text: "+=",      top: "1100px", left: "84%",  size: "md" },
+  { text: "->",      top: "1700px", left: "7%",   size: "lg" },
+  { text: "fn()",    top: "2300px", left: "84%",  size: "md" },
+  { text: "!",       top: "2900px", left: "7%",   size: "lg" },
+  { text: "new",     top: "3400px", left: "84%",  size: "md" },
+  { text: "true",    top: "4000px", left: "7%",   size: "sm" },
+  { text: "log",     top: "4500px", left: "84%",  size: "lg" },
+  { text: "0x00",    top: "5000px", left: "7%",   size: "md" },
+];
+
+const BackgroundGlyphs = () => (
+  <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
+    {bgGlyphs.map((g, i) => (
+      <span
+        key={i}
+        className={`bg-glyph bg-glyph-${g.size}`}
+        style={{
+          top: g.top,
+          left: g.left,
+          animationDelay: `${(i * 0.37) % 4}s`,
+          animationDuration: `${3 + (i % 3)}s`,
+        }}
+      >
+        {g.text}
+      </span>
+    ))}
+  </div>
 );
 
 const CornerBrackets = () => (
@@ -397,7 +641,8 @@ const MobileNav = () => {
 
 const Index = () => {
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background min-h-screen relative">
+      <BackgroundGlyphs />
       <CornerBrackets />
       <SideNav />
       <MobileNav />
@@ -408,6 +653,7 @@ const Index = () => {
         <RolesSection />
         <ProjectsSection />
         <SkillsSection />
+        <NextSection />
         <ContactSection />
         <Footer />
       </div>

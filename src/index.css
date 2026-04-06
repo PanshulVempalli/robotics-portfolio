@@ -57,6 +57,54 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-mono);
+    /* Dot grid + diagonal texture */
+    background-image:
+      radial-gradient(circle, hsl(263 40% 55% / 0.22) 1px, transparent 1px),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 18px,
+        hsl(263 40% 60% / 0.045) 18px,
+        hsl(263 40% 60% / 0.045) 19px
+      ),
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 18px,
+        hsl(263 40% 60% / 0.03) 18px,
+        hsl(263 40% 60% / 0.03) 19px
+      );
+    background-size: 24px 24px, 26px 26px, 26px 26px;
+  }
+
+  /* Scanline overlay for CRT texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      hsl(263 40% 40% / 0.03) 3px,
+      hsl(263 40% 40% / 0.03) 4px
+    );
+  }
+
+  /* Vignette — darkens edges for depth */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 55%,
+      hsl(240 10% 10% / 0.12) 100%
+    );
   }
 
   h1, h2, h3, h4, h5, h6, p, span, a, li, div {
@@ -108,6 +156,15 @@
     border-bottom: 2px solid hsl(var(--border));
     border-right: 2px solid hsl(var(--border));
   }
+
+  /* Hover glow on cards */
+  .card-hover {
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .card-hover:hover {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 12px hsl(263 70% 50% / 0.15), inset 0 0 20px hsl(263 70% 50% / 0.04);
+  }
 }
 
 @keyframes slide-up {
@@ -115,15 +172,36 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes blink-slow {
+  0%, 100% { opacity: 0.18; }
+  50%       { opacity: 0.35; }
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+.bg-glyph {
+  position: absolute;
+  font-family: var(--font-mono);
+  color: hsl(263 70% 50%);
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+  animation: blink-slow 4s ease-in-out infinite;
+}
+
+.bg-glyph-sm  { font-size: 11px; }
+.bg-glyph-md  { font-size: 15px; }
+.bg-glyph-lg  { font-size: 20px; letter-spacing: 2px; }
+
 /* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: hsl(var(--background));
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary)); }
