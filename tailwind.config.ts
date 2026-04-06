@@ -14,9 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['JetBrains Mono', 'monospace'],
-        body: ['Inter', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        mono: ['JetBrains Mono', 'Space Mono', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -52,11 +50,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        surface: "hsl(var(--surface))",
-        "surface-hover": "hsl(var(--surface-hover))",
-        glow: "hsl(var(--glow))",
-        "terminal-green": "hsl(var(--terminal-green))",
-        "cyber-amber": "hsl(var(--cyber-amber))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -70,8 +63,8 @@ export default {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "var(--radius)",
+        sm: "var(--radius)",
       },
       keyframes: {
         "accordion-down": {
