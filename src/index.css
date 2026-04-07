@@ -10,22 +10,22 @@ html {
 
 @layer base {
   :root {
-    --background: 30 25% 95%;
+    --background: 43 22% 94%;
     --foreground: 240 10% 15%;
 
-    --card: 30 20% 92%;
+    --card: 43 18% 91%;
     --card-foreground: 240 10% 15%;
 
-    --popover: 30 20% 92%;
+    --popover: 43 18% 91%;
     --popover-foreground: 240 10% 15%;
 
     --primary: 32 95% 44%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 30 15% 88%;
+    --secondary: 43 13% 87%;
     --secondary-foreground: 240 10% 15%;
 
-    --muted: 30 15% 88%;
+    --muted: 43 13% 87%;
     --muted-foreground: 240 5% 45%;
 
     --accent: 32 95% 44%;
@@ -34,19 +34,19 @@ html {
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 32 60% 65%;
-    --input: 30 15% 85%;
+    --border: 38 55% 63%;
+    --input: 43 13% 84%;
     --ring: 32 95% 44%;
 
     --radius: 0px;
 
-    --sidebar-background: 30 25% 95%;
+    --sidebar-background: 43 22% 94%;
     --sidebar-foreground: 240 10% 15%;
     --sidebar-primary: 32 95% 44%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 15% 88%;
+    --sidebar-accent: 43 13% 87%;
     --sidebar-accent-foreground: 240 10% 15%;
-    --sidebar-border: 32 60% 65%;
+    --sidebar-border: 38 55% 63%;
     --sidebar-ring: 32 95% 44%;
 
     --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
@@ -63,20 +63,20 @@ html {
     font-family: var(--font-mono);
     /* Dot grid + diagonal texture */
     background-image:
-      radial-gradient(circle, hsl(32 60% 55% / 0.22) 1px, transparent 1px),
+      radial-gradient(circle, hsl(38 55% 52% / 0.22) 1px, transparent 1px),
       repeating-linear-gradient(
         -45deg,
         transparent,
         transparent 18px,
-        hsl(32 60% 55% / 0.045) 18px,
-        hsl(32 60% 55% / 0.045) 19px
+        hsl(38 55% 52% / 0.045) 18px,
+        hsl(38 55% 52% / 0.045) 19px
       ),
       repeating-linear-gradient(
         45deg,
         transparent,
         transparent 18px,
-        hsl(32 60% 55% / 0.03) 18px,
-        hsl(32 60% 55% / 0.03) 19px
+        hsl(38 55% 52% / 0.03) 18px,
+        hsl(38 55% 52% / 0.03) 19px
       );
     background-size: 24px 24px, 26px 26px, 26px 26px;
   }
@@ -94,39 +94,39 @@ html {
         0deg,
         transparent,
         transparent 3px,
-        hsl(32 40% 40% / 0.03) 3px,
-        hsl(32 40% 40% / 0.03) 4px
+        hsl(43 35% 38% / 0.03) 3px,
+        hsl(43 35% 38% / 0.03) 4px
       ),
       /* Bolder horizontal rule every 96px */
       repeating-linear-gradient(
         0deg,
         transparent,
         transparent 95px,
-        hsl(32 50% 40% / 0.07) 95px,
-        hsl(32 50% 40% / 0.07) 96px
+        hsl(43 45% 38% / 0.07) 95px,
+        hsl(43 45% 38% / 0.07) 96px
       ),
       /* Vertical rule every 96px */
       repeating-linear-gradient(
         90deg,
         transparent,
         transparent 95px,
-        hsl(32 50% 40% / 0.05) 95px,
-        hsl(32 50% 40% / 0.05) 96px
+        hsl(43 45% 38% / 0.05) 95px,
+        hsl(43 45% 38% / 0.05) 96px
       ),
       /* Subtle diagonal cross-hatch */
       repeating-linear-gradient(
         30deg,
         transparent,
         transparent 40px,
-        hsl(32 40% 40% / 0.018) 40px,
-        hsl(32 40% 40% / 0.018) 41px
+        hsl(43 35% 38% / 0.018) 40px,
+        hsl(43 35% 38% / 0.018) 41px
       ),
       repeating-linear-gradient(
         -30deg,
         transparent,
         transparent 40px,
-        hsl(32 40% 40% / 0.018) 40px,
-        hsl(32 40% 40% / 0.018) 41px
+        hsl(43 35% 38% / 0.018) 40px,
+        hsl(43 35% 38% / 0.018) 41px
       );
   }
 
