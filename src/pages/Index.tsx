@@ -528,6 +528,43 @@ const SectionHeader = ({ title }: { title: string }) => (
   </div>
 );
 
+const TypingText = () => {
+  const phrases = [
+    "Aspiring Robotics Engineer",
+    "Visual Computing Engineer",
+    "VEX Robotics Developer",
+    "Open Source Contributor",
+  ];
+  const [index, setIndex] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = phrases[index];
+    let timeout: ReturnType<typeof setTimeout>;
+
+    if (!deleting && displayed.length < current.length) {
+      timeout = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 80);
+    } else if (!deleting && displayed.length === current.length) {
+      timeout = setTimeout(() => setDeleting(true), 1500);
+    } else if (deleting && displayed.length > 0) {
+      timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 40);
+    } else {
+      setDeleting(false);
+      setIndex((prev) => (prev + 1) % phrases.length);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayed, deleting, index]);
+
+  return (
+    <span>
+      {displayed}
+      <span className="cursor-blink text-primary ml-0.5">_</span>
+    </span>
+  );
+};
+
 const HeroSection = () => (
   <section id="home" className="min-h-screen flex items-center justify-center px-4">
     <div className="text-center max-w-2xl">
