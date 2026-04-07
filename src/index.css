@@ -209,6 +209,11 @@ html {
   to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes ripple-expand {
+  from { width: 4px; height: 4px; opacity: 0.8; }
+  to   { width: 72px; height: 72px; opacity: 0; }
+}
+
 @keyframes blink-slow {
   0%, 100% { opacity: 0.18; }
   50%       { opacity: 0.35; }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import type React from "react";
 import { Github, Linkedin, ExternalLink } from "lucide-react";
 
 // ── BootSequence ──────────────────────────────────────────────────────────────
@@ -164,8 +165,7 @@ const runCommand = (raw: string): TerminalEntry[] => {
   return entries;
 };
 
-const TerminalWidget = () => {
-  const [open, setOpen] = useState(false);
+const TerminalWidget = ({ open, setOpen }: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
   const [history, setHistory] = useState<TerminalEntry[]>(INITIAL_HISTORY);
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
@@ -263,6 +263,210 @@ const TerminalWidget = () => {
   );
 };
 
+// ── CursorTrail ────────────────────────────────────────────────────────────────
+const CursorTrail = () => {
+  const [trail, setTrail] = useState<{ x: number; y: number; id: number }[]>([]);
+  const idRef = useRef(0);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const id = idRef.current++;
+      setTrail((prev) => [...prev.slice(-10), { x: e.clientX, y: e.clientY, id }]);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  return (
+    <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9990 }}>
+      {trail.map((p, i) => (
+        <span
+          key={p.id}
+          style={{
+            position: "fixed",
+            left: p.x,
+            top: p.y,
+            transform: "translate(-50%, -50%)",
+            opacity: ((i + 1) / trail.length) * 0.55,
+            fontSize: `${7 + i}px`,
+            color: "hsl(32 95% 44%)",
+            fontFamily: "monospace",
+            pointerEvents: "none",
+            lineHeight: 1,
+            userSelect: "none",
+          }}
+        >
+          +
+        </span>
+      ))}
+    </div>
+  );
+};
+
+// ── ClickRipple ────────────────────────────────────────────────────────────────
+type Ripple = { x: number; y: number; id: number };
+
+const ClickRipple = () => {
+  const [ripples, setRipples] = useState<Ripple[]>([]);
+  const idRef = useRef(0);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const id = idRef.current++;
+      setRipples((prev) => [...prev, { x: e.clientX, y: e.clientY, id }]);
+      setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 700);
+    };
+    window.addEventListener("click", onClick);
+    return () => window.removeEventListener("click", onClick);
+  }, []);
+
+  return (
+    <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9990 }}>
+      {ripples.map((r) => (
+        <div
+          key={r.id}
+          style={{
+            position: "fixed",
+            left: r.x,
+            top: r.y,
+            width: 4,
+            height: 4,
+            border: "1.5px solid hsl(32 95% 44% / 0.7)",
+            borderRadius: "50%",
+            transform: "translate(-50%, -50%)",
+            animation: "ripple-expand 0.7s ease-out forwards",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// ── KonamiEgg ──────────────────────────────────────────────────────────────────
+const KONAMI_SEQ = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+
+const KonamiEgg = ({ onActivate }: { onActivate: () => void }) => {
+  const seq = useRef<string[]>([]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      seq.current = [...seq.current, e.key].slice(-KONAMI_SEQ.length);
+      if (seq.current.join(",") === KONAMI_SEQ.join(",")) {
+        onActivate();
+        seq.current = [];
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onActivate]);
+
+  return null;
+};
+
+const KonamiOverlay = ({ onClose }: { onClose: () => void }) => (
+  <div
+    className="fixed inset-0 z-[9995] flex items-center justify-center bg-background/90 font-mono"
+    onClick={onClose}
+  >
+    <div className="border border-primary p-8 text-center max-w-sm animate-slide-up" onClick={(e) => e.stopPropagation()}>
+      <div className="text-primary font-bold text-lg tracking-widest mb-4">ACCESS GRANTED</div>
+      <div className="text-xs text-muted-foreground space-y-2 mb-6">
+        <p className="text-green-600">[OK] Developer mode unlocked</p>
+        <p className="text-green-600">[OK] All systems nominal</p>
+        <p className="text-green-600">[OK] Easter egg found</p>
+        <p className="text-primary mt-4">You found the Konami code.</p>
+        <p className="text-muted-foreground">Respect.</p>
+      </div>
+      <button onClick={onClose} className="text-xs border border-border px-4 py-1.5 hover:border-primary hover:text-primary transition-colors">
+        [dismiss]
+      </button>
+    </div>
+  </div>
+);
+
+// ── KeyboardShortcuts ──────────────────────────────────────────────────────────
+const ShortcutsPanel = ({ onClose }: { onClose: () => void }) => (
+  <div
+    className="fixed inset-0 z-[9990] flex items-center justify-center bg-background/80"
+    onClick={onClose}
+  >
+    <div className="border border-primary p-6 bg-background max-w-xs w-full font-mono animate-slide-up" onClick={(e) => e.stopPropagation()}>
+      <div className="text-primary font-bold text-xs tracking-widest mb-5">// KEYBOARD SHORTCUTS</div>
+      {([
+        ["?", "show this panel"],
+        ["T", "toggle terminal"],
+        ["G", "open GitHub"],
+        ["Esc", "close panels"],
+        ["↑↑↓↓←→←→BA", "???"],
+      ] as [string, string][]).map(([key, desc]) => (
+        <div key={key} className="flex items-center justify-between text-xs mb-3">
+          <span className="border border-border px-2 py-0.5 text-foreground min-w-[60px] text-center">{key}</span>
+          <span className="text-muted-foreground">{desc}</span>
+        </div>
+      ))}
+      <button className="text-xs text-muted-foreground mt-2 hover:text-primary transition-colors" onClick={onClose}>
+        [esc] close
+      </button>
+    </div>
+  </div>
+);
+
+// ── SessionTimer ───────────────────────────────────────────────────────────────
+const SessionTimer = () => {
+  const startRef = useRef(Date.now());
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  const display = m > 0 ? `${m}m ${String(s).padStart(2, "0")}s` : `${s}s`;
+
+  return (
+    <div className="fixed bottom-6 left-6 z-40 text-[11px] text-muted-foreground font-mono opacity-40 hover:opacity-90 transition-opacity select-none">
+      [session: {display}]
+    </div>
+  );
+};
+
+// ── IdleMode ───────────────────────────────────────────────────────────────────
+const IdleMode = () => {
+  const [idle, setIdle] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    const reset = () => {
+      setIdle(false);
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setIdle(true), 50000);
+    };
+    const events = ["mousemove", "mousedown", "keydown", "scroll", "touchstart"] as const;
+    events.forEach((e) => window.addEventListener(e, reset, { passive: true }));
+    reset();
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, reset));
+      clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  if (!idle) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9000] bg-background/60 flex items-center justify-center pointer-events-none">
+      <div className="text-primary text-xs font-mono tracking-[0.3em] animate-pulse">
+        // STANDBY — move to resume
+      </div>
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 const navItems = [
   { label: "Home", id: "home" },
   { label: "About Me", id: "about" },
@@ -342,11 +546,11 @@ const HeroSection = () => (
 
       {/* ASCII name */}
       <pre className="text-xs sm:text-sm leading-tight mb-4 text-foreground font-bold select-none whitespace-pre overflow-x-auto">
-{`____ _   _ _  _ ____  _   _ _   _ _
-| _\\ / \ | \\  | / ___|| | | | | | | |
-||_) / _\\|  \\ | \\___ \\| |_| | | | | |
-| __/ ___ \\ |\\|___) ||  _  | |_| | |___
-|_| /_/   \\_\\_| \\_|____/ |_| |_|\\___/|_____|`}
+{` ____ _   _ _  _ ____  _   _ _   _ _
+| _ \\ / \ | \\  | / ___|| | | | | | | |
+|| _ ) / _\\|  \\ | \\___ \\| |_| | | | | |
+ |  __/ ___ \\   |\\|   ___) ||  _ | |_| | |___
+  | _| /_/   \\_\\_| \\_|____/ |_| |_|\\___/|____|`}
       </pre>
 
       <h1 className="text-2xl md:text-3xl font-bold tracking-wider mb-4">
@@ -914,11 +1118,40 @@ const Index = () => {
   const [booted, setBooted] = useState(
     () => sessionStorage.getItem("booted") === "1"
   );
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [konamiActive, setKonamiActive] = useState(false);
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (e.key === "?") setShowShortcuts((v) => !v);
+      if (e.key === "t" || e.key === "T") setTerminalOpen((v) => !v);
+      if (e.key === "g" || e.key === "G") window.open("https://github.com/PanshulVempalli", "_blank");
+      if (e.key === "Escape") { setShowShortcuts(false); setTerminalOpen(false); setKonamiActive(false); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <div className="bg-background min-h-screen relative">
       {!booted && <BootSequence onDone={() => setBooted(true)} />}
+
+      {/* Always-on effects */}
       <ScrollProgress />
+      <CursorTrail />
+      <ClickRipple />
+      <IdleMode />
+      <SessionTimer />
+
+      {/* Easter egg & overlays */}
+      <KonamiEgg onActivate={() => setKonamiActive(true)} />
+      {konamiActive && <KonamiOverlay onClose={() => setKonamiActive(false)} />}
+      {showShortcuts && <ShortcutsPanel onClose={() => setShowShortcuts(false)} />}
+
       <BackgroundGlyphs />
       <CornerBrackets />
       <SideNav />
@@ -935,7 +1168,7 @@ const Index = () => {
         <Footer />
       </div>
 
-      <TerminalWidget />
+      <TerminalWidget open={terminalOpen} setOpen={setTerminalOpen} />
     </div>
   );
 };
