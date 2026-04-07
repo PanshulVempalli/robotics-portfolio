@@ -80,11 +80,11 @@ const HeroSection = () => (
 
       {/* ASCII name */}
       <pre className="text-xs sm:text-sm leading-tight mb-4 text-foreground font-bold select-none whitespace-pre overflow-x-auto">
-{` ____     _      _   _   ____  _   _  _   _  _
-|  _ \\   / \\    | \\ | | / ___|| | | || | | || |
-| |_) | / _ \\   |  \\| | \\___ \\| |_| || | | || |
-|  __/ / ___ \\  | |\\  |  ___) ||  _  || |_| || |___
-|_|   /_/   \\_\\ |_| \\_| |____/ |_| |_| \\___/ |_____|`}
+{`####  ##### #   # ##### #   # #   # #
+#   # #   # ##  # #     #   # #   # #
+####  ##### # # # ##### ##### #   # #
+#     #   # #  ##     # #   # #   # #
+#     #   # #   # ##### #   #  ###  #####`}
       </pre>
 
       <h1 className="text-2xl md:text-3xl font-bold tracking-wider mb-4">
