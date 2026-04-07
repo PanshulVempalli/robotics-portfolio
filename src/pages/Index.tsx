@@ -164,11 +164,24 @@ const runCommand = (raw: string): TerminalEntry[] => {
   return entries;
 };
 
-const TerminalWidget = ({ open, setOpen }: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const TerminalWidget = () => {
+  const [open, setOpen] = useState(false);
   const [history, setHistory] = useState<TerminalEntry[]>(INITIAL_HISTORY);
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Listen for external toggle / close (keyboard shortcuts)
+  useEffect(() => {
+    const toggle = () => setOpen((o) => !o);
+    const close = () => setOpen(false);
+    window.addEventListener("toggle-terminal", toggle);
+    window.addEventListener("close-terminal", close);
+    return () => {
+      window.removeEventListener("toggle-terminal", toggle);
+      window.removeEventListener("close-terminal", close);
+    };
+  }, []);
 
   // Auto-scroll on new output
   useEffect(() => {
@@ -201,20 +214,20 @@ const TerminalWidget = ({ open, setOpen }: { open: boolean; setOpen: React.Dispa
       {/* Toggle button */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-6 right-6 z-50 text-xs border border-primary text-primary px-3 py-1.5 bg-background hover:bg-primary hover:text-primary-foreground transition-colors font-mono"
+        className="fixed bottom-6 right-6 z-[9980] text-xs border border-primary text-primary px-3 py-1.5 bg-background hover:bg-primary hover:text-primary-foreground transition-colors font-mono"
       >
-        [&gt;_] terminal
+        [&gt;_] R•CONSOLE
       </button>
 
       {/* Panel */}
       {open && (
         <div
-          className="fixed bottom-16 right-6 z-50 w-80 border border-primary bg-background font-mono text-xs animate-slide-up"
+          className="fixed bottom-16 right-6 z-[9980] w-80 border border-primary bg-background font-mono text-xs animate-slide-up"
           style={{ boxShadow: "0 0 24px rgba(0,0,0,0.6)" }}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-3 py-2 border-b border-primary">
-            <span className="text-primary">PANSHUL://terminal</span>
+            <span className="text-primary">PANSHUL://r-console</span>
             <button
               onClick={() => setOpen(false)}
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -470,6 +483,7 @@ const navItems = [
   { label: "Home", id: "home" },
   { label: "About Me", id: "about" },
   { label: "Roles", id: "roles" },
+  { label: "Accolades", id: "accolades" },
   { label: "Projects", id: "projects" },
   { label: "Skills", id: "skills" },
   { label: "What's Next", id: "next" },
@@ -861,6 +875,63 @@ const projects = [
   },
 ];
 
+const accolades = [
+  {
+    title: "VEX Worlds",
+    type: "Competition",
+    period: "2026",
+    org: "VEX Robotics World Championship",
+    detail: "Qualified and competed at the VEX Robotics World Championship with Habs Gliders 34071B.",
+    icon: "🏆",
+  },
+  {
+    title: "Greenpower Internationals",
+    type: "Competition",
+    period: "2025",
+    org: "Greenpower Education Trust",
+    detail: "Competed at international level with HABS Powerstrike in the Greenpower F24+ electric racing competition.",
+    icon: "⚡",
+  },
+  {
+    title: "Portfolio Award — Regionals",
+    type: "Award",
+    period: "2025",
+    org: "VEX Robotics",
+    detail: "Recognised for engineering documentation and team portfolio at regional competition level with Habs Gliders.",
+    icon: "◈",
+  },
+  {
+    title: "CREST Award — Bronze",
+    type: "Award",
+    period: "2024",
+    org: "British Science Association",
+    detail: "Completed an independent STEM research project at Bronze level.",
+    icon: "◆",
+  },
+];
+
+const AccoladesSection = () => (
+  <section id="accolades" className="py-16 px-4">
+    <SectionHeader title="ACCOLADES" />
+    <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {accolades.map((a) => (
+        <div key={a.title} className="card-hover border border-border pl-4 pr-3 py-4 transition-colors hover:border-primary group">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <span className="text-lg leading-none">{a.icon}</span>
+            <div className="flex gap-2 ml-auto">
+              <span className="text-[11px] text-primary border border-primary px-2 py-0.5">{a.type}</span>
+              <span className="text-[11px] text-muted-foreground border border-border px-2 py-0.5">{a.period}</span>
+            </div>
+          </div>
+          <h3 className="text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{a.title}</h3>
+          <p className="text-[11px] text-primary mb-2">{a.org}</p>
+          <p className="text-xs text-muted-foreground leading-relaxed">— {a.detail}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
 const ProjectsSection = () => (
   <section id="projects" className="py-16 px-4">
     <SectionHeader title="PROJECTS" />
@@ -1171,7 +1242,6 @@ const Index = () => {
   const [booted, setBooted] = useState(
     () => sessionStorage.getItem("booted") === "1"
   );
-  const [terminalOpen, setTerminalOpen] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [konamiActive, setKonamiActive] = useState(false);
 
@@ -1181,9 +1251,9 @@ const Index = () => {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === "INPUT" || tag === "TEXTAREA") return;
       if (e.key === "?") setShowShortcuts((v) => !v);
-      if (e.key === "t" || e.key === "T") setTerminalOpen((v) => !v);
+      if (e.key === "t" || e.key === "T") window.dispatchEvent(new CustomEvent("toggle-terminal"));
       if (e.key === "g" || e.key === "G") window.open("https://github.com/PanshulVempalli", "_blank");
-      if (e.key === "Escape") { setShowShortcuts(false); setTerminalOpen(false); setKonamiActive(false); }
+      if (e.key === "Escape") { setShowShortcuts(false); setKonamiActive(false); window.dispatchEvent(new CustomEvent("close-terminal")); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -1214,6 +1284,7 @@ const Index = () => {
         <HeroSection />
         <AboutSection />
         <RolesSection />
+        <AccoladesSection />
         <ProjectsSection />
         <SkillsSection />
         <NextSection />
@@ -1221,7 +1292,7 @@ const Index = () => {
         <Footer />
       </div>
 
-      <TerminalWidget open={terminalOpen} setOpen={setTerminalOpen} />
+      <TerminalWidget />
     </div>
   );
 };
