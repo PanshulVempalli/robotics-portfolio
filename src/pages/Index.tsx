@@ -26,7 +26,6 @@ const BootSequence = ({ onDone }: { onDone: () => void }) => {
       const t = setTimeout(() => {
         setFading(true);
         setTimeout(() => {
-          sessionStorage.setItem("booted", "1");
           onDone();
         }, 500);
       }, 600);
