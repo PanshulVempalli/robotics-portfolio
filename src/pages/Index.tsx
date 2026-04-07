@@ -1,5 +1,267 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Github, Linkedin, ExternalLink } from "lucide-react";
+
+// ── BootSequence ──────────────────────────────────────────────────────────────
+const BOOT_LINES = [
+  "PANSHUL OS v1.0 — LOADING...",
+  "[OK] Robotics kernel initialized",
+  "[OK] PID controllers calibrated",
+  "[OK] Sensor arrays online",
+  "[OK] Memory allocated: 4096KB",
+  "[OK] Vision systems ready",
+  "[OK] Autonomous routines loaded",
+  "SYSTEM READY.",
+];
+
+const BootSequence = ({ onDone }: { onDone: () => void }) => {
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    if (visibleCount < BOOT_LINES.length) {
+      const t = setTimeout(() => setVisibleCount((c) => c + 1), 180);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => {
+        setFading(true);
+        setTimeout(() => {
+          sessionStorage.setItem("booted", "1");
+          onDone();
+        }, 500);
+      }, 600);
+      return () => clearTimeout(t);
+    }
+  }, [visibleCount, onDone]);
+
+  const progress = Math.round((visibleCount / BOOT_LINES.length) * 100);
+
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-background transition-opacity duration-500"
+      style={{ opacity: fading ? 0 : 1 }}
+    >
+      <div className="w-full max-w-lg px-6 font-mono text-sm space-y-1">
+        {BOOT_LINES.slice(0, visibleCount).map((line, i) => {
+          let cls = "text-foreground";
+          if (line.startsWith("[OK]")) cls = "text-green-600";
+          else if (line === "SYSTEM READY.") cls = "text-primary font-bold";
+          return (
+            <div key={i} className={cls}>
+              {line}
+            </div>
+          );
+        })}
+
+        {/* Progress bar */}
+        <div className="mt-6 h-1 w-full bg-secondary rounded-full overflow-hidden">
+          <div
+            className="h-full bg-primary transition-all duration-150"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── ScrollProgress ─────────────────────────────────────────────────────────────
+const ScrollProgress = () => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const scrolled = window.scrollY;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(total > 0 ? (scrolled / total) * 100 : 0);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className="fixed top-0 left-0 w-full h-[2px] bg-secondary z-50">
+      <div
+        className="h-full bg-primary transition-all duration-75"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  );
+};
+
+// ── TerminalWidget ─────────────────────────────────────────────────────────────
+type TerminalEntry = { type: "cmd" | "out"; text: string };
+
+const INITIAL_HISTORY: TerminalEntry[] = [
+  { type: "out", text: 'Terminal v1.0 — type "help" for commands' },
+];
+
+const runCommand = (raw: string): TerminalEntry[] => {
+  const cmd = raw.trim();
+  const entries: TerminalEntry[] = [{ type: "cmd", text: cmd }];
+
+  const out = (...lines: string[]) => {
+    lines.forEach((l) => entries.push({ type: "out", text: l }));
+  };
+
+  if (cmd === "help") {
+    out(
+      "available commands:",
+      "  whoami   projects   skills   contact",
+      "  ls       uname      ping     date",
+      "  clear    sudo"
+    );
+  } else if (cmd === "whoami") {
+    out(
+      "Panshul Vempalli",
+      "Year 10 @ Haberdashers' Boys' School",
+      "Lead Programmer — VEX Robotics | Software Lead — CanSat",
+      "Aspiring Robotics & Visual Computing Engineer"
+    );
+  } else if (cmd === "ls") {
+    out("home/  about/  roles/  projects/  skills/  next/  contact/");
+  } else if (cmd === "skills") {
+    out(
+      "C++ (intermediate), Python (proficient), HTML/CSS (proficient)",
+      "Tools: Git, VS Code, Arduino IDE, VEX V5, Fusion 360",
+      "Concepts: PID Control, Sensor Fusion, Embedded C++, Telemetry"
+    );
+  } else if (cmd === "projects") {
+    out(
+      "1. Habs Gliders Team Website            [Live]",
+      "2. JAR Template — VEX Competition Code  [Complete]",
+      "3. VEX V5 — Prematch Auton Example      [Complete]",
+      "4. VEX V5 — Python Skills Auton         [Complete]",
+      "5. Choose Your Level                    [Live]",
+      "6. CanSat — Atmospheric Data Relay      [In Progress]"
+    );
+  } else if (cmd === "contact") {
+    out(
+      "email: panshulvempalli@gmail.com",
+      "github: github.com/PanshulVempalli",
+      "linkedin: coming soon"
+    );
+  } else if (cmd === "uname") {
+    out(
+      "PANSHUL-OS v1.0 — robotics-kernel 2.0",
+      "Stack: React + TypeScript + Vite",
+      "Deployed: panshulvempalli.vercel.app"
+    );
+  } else if (cmd === "sudo rm -rf /" || cmd === "sudo") {
+    out("Permission denied. Nice try.");
+  } else if (cmd === "ping") {
+    out(
+      "PING panshul.io: 64 bytes, seq=0, time=<1ms",
+      "No packet loss."
+    );
+  } else if (cmd === "date") {
+    out(new Date().toString());
+  } else if (cmd === "clear") {
+    return []; // signal to reset
+  } else {
+    out(`command not found: ${cmd}  — type "help"`);
+  }
+
+  return entries;
+};
+
+const TerminalWidget = () => {
+  const [open, setOpen] = useState(false);
+  const [history, setHistory] = useState<TerminalEntry[]>(INITIAL_HISTORY);
+  const [input, setInput] = useState("");
+  const outputRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-scroll on new output
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight;
+    }
+  }, [history]);
+
+  // Focus input when opened
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+    }
+  }, [open]);
+
+  const submit = () => {
+    const cmd = input.trim();
+    if (!cmd) return;
+    setInput("");
+    if (cmd === "clear") {
+      setHistory(INITIAL_HISTORY);
+      return;
+    }
+    const newEntries = runCommand(cmd);
+    setHistory((h) => [...h, ...newEntries]);
+  };
+
+  return (
+    <>
+      {/* Toggle button */}
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="fixed bottom-6 right-6 z-50 text-xs border border-primary text-primary px-3 py-1.5 bg-background hover:bg-primary hover:text-primary-foreground transition-colors font-mono"
+      >
+        [&gt;_] terminal
+      </button>
+
+      {/* Panel */}
+      {open && (
+        <div
+          className="fixed bottom-16 right-6 z-50 w-80 border border-primary bg-background font-mono text-xs animate-slide-up"
+          style={{ boxShadow: "0 0 24px rgba(0,0,0,0.6)" }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-3 py-2 border-b border-primary">
+            <span className="text-primary">PANSHUL://terminal</span>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              ×
+            </button>
+          </div>
+
+          {/* Output */}
+          <div
+            ref={outputRef}
+            className="h-48 overflow-y-auto px-3 py-2 space-y-0.5"
+          >
+            {history.map((entry, i) => (
+              <div
+                key={i}
+                className={
+                  entry.type === "cmd"
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }
+              >
+                {entry.type === "cmd" ? `$ ${entry.text}` : entry.text}
+              </div>
+            ))}
+          </div>
+
+          {/* Input row */}
+          <div className="flex items-center border-t border-primary px-3 py-2 gap-2">
+            <span className="text-primary">$</span>
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+              className="flex-1 bg-transparent text-foreground outline-none caret-primary placeholder:text-muted-foreground"
+              placeholder="type a command..."
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
 
 const navItems = [
   { label: "Home", id: "home" },
@@ -649,8 +911,14 @@ const MobileNav = () => {
 };
 
 const Index = () => {
+  const [booted, setBooted] = useState(
+    () => sessionStorage.getItem("booted") === "1"
+  );
+
   return (
     <div className="bg-background min-h-screen relative">
+      {!booted && <BootSequence onDone={() => setBooted(true)} />}
+      <ScrollProgress />
       <BackgroundGlyphs />
       <CornerBrackets />
       <SideNav />
@@ -666,6 +934,8 @@ const Index = () => {
         <ContactSection />
         <Footer />
       </div>
+
+      <TerminalWidget />
     </div>
   );
 };
