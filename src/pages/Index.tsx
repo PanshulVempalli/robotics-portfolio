@@ -498,17 +498,17 @@ const ContactSection = () => (
       </div>
 
       {/* Goals widget */}
-      <div className="mt-12 border border-primary p-4 max-w-sm mx-auto text-left space-y-3">
-        <p className="text-[10px] font-bold tracking-widest text-primary mb-3">CURRENT GOALS</p>
+      <div className="mt-12 border border-primary p-6 max-w-md mx-auto text-left space-y-4">
+        <p className="text-xs font-bold tracking-widest text-primary mb-4">CURRENT GOALS</p>
         {[
           { label: "Work Experience", detail: "Reaching out to UK universities — in progress" },
           { label: "Arkwright Scholarship", detail: "Preparing application for 2026" },
           { label: "Physics Olympiad", detail: "Signed up — BPhO 2026" },
           { label: "CREST Silver", detail: "Independent research project in progress" },
         ].map((g) => (
-          <div key={g.label} className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-bold text-foreground">&gt; {g.label}</span>
-            <span className="text-[10px] text-muted-foreground pl-3">— {g.detail}</span>
+          <div key={g.label} className="flex flex-col gap-1">
+            <span className="text-sm font-bold text-foreground">&gt; {g.label}</span>
+            <span className="text-xs text-muted-foreground pl-4">— {g.detail}</span>
           </div>
         ))}
       </div>
