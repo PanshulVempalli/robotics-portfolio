@@ -78,19 +78,27 @@ const HeroSection = () => (
         </a>
       </div>
 
-      {/* ASCII-style name */}
-      <pre className="text-xs sm:text-sm leading-tight mb-6 text-foreground font-bold select-none whitespace-pre overflow-x-auto">
-{`██████╗  █████╗ ███╗   ██╗███████╗██╗  ██╗██╗   ██╗██╗     
-██╔══██╗██╔══██╗████╗  ██║██╔════╝██║  ██║██║   ██║██║     
-██████╔╝███████║██╔██╗ ██║███████╗███████║██║   ██║██║     
-██╔═══╝ ██╔══██║██║╚██╗██║╚════██║██╔══██║██║   ██║██║     
-██║     ██║  ██║██║ ╚████║███████║██║  ██║╚██████╔╝███████╗
-╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝`}
-      </pre>
-
-      <h1 className="text-2xl md:text-3xl font-bold tracking-wider mb-4">
-        Panshul Vempalli
-      </h1>
+      {/* Name display */}
+      <div className="mb-6 select-none">
+        <div
+          className="font-black leading-none tracking-[0.18em] mb-2"
+          style={{
+            fontSize: "clamp(3.2rem, 12vw, 8rem)",
+            WebkitTextStroke: "2px hsl(32, 95%, 44%)",
+            color: "transparent",
+            textShadow: "0 0 60px hsl(32 95% 44% / 0.2)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          PANSHUL
+        </div>
+        <div
+          className="font-bold tracking-[0.35em] text-muted-foreground"
+          style={{ fontSize: "clamp(0.9rem, 3vw, 1.4rem)", fontFamily: "var(--font-mono)" }}
+        >
+          VEMPALLI
+        </div>
+      </div>
 
       <div className="border-t border-border w-64 mx-auto mb-3" />
       <p className="text-sm text-muted-foreground">
@@ -617,14 +625,7 @@ const BackgroundGlyphs = () => (
   </div>
 );
 
-const CornerBrackets = () => (
-  <>
-    <div className="corner-bracket corner-tl" />
-    <div className="corner-bracket corner-tr" />
-    <div className="corner-bracket corner-bl" />
-    <div className="corner-bracket corner-br" />
-  </>
-);
+const CornerBrackets = () => null;
 
 // Mobile nav
 const MobileNav = () => {
