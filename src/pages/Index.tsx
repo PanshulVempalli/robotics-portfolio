@@ -105,10 +105,18 @@ const runCommand = (raw: string): TerminalEntry[] => {
 
   if (cmd === "help") {
     out(
-      "available commands:",
-      "  whoami   projects   skills   contact",
-      "  ls       uname      ping     date",
-      "  clear    sudo"
+      "── R•CONSOLE v1.0 ──────────────────",
+      "  whoami    — who is Panshul?",
+      "  projects  — list all projects",
+      "  skills    — languages, tools & concepts",
+      "  contact   — get in touch",
+      "  ls        — list site sections",
+      "  uname     — system info",
+      "  ping      — connection check",
+      "  date      — current date & time",
+      "  sudo      — try your luck",
+      "  clear     — clear the console",
+      "────────────────────────────────────"
     );
   } else if (cmd === "whoami") {
     out(
