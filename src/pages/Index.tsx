@@ -70,11 +70,11 @@ const HeroSection = () => (
       <div className="flex justify-center gap-6 mb-8">
         <span title="Coming soon!" className="text-muted-foreground cursor-default flex flex-col items-center gap-1">
           <Linkedin className="h-8 w-8" />
-          <span className="text-[9px] tracking-widest">COMING SOON</span>
+          <span className="text-[13px] tracking-widest">COMING SOON</span>
         </span>
         <a href="https://github.com/PanshulVempalli" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary transition-colors flex flex-col items-center gap-1">
           <Github className="h-8 w-8" />
-          <span className="text-[9px] tracking-widest">GITHUB</span>
+          <span className="text-[13px] tracking-widest">GITHUB</span>
         </a>
       </div>
 
@@ -177,10 +177,10 @@ const RolesSection = () => (
           <div className="flex items-start justify-between flex-wrap gap-2 mb-1">
             <h3 className="text-sm font-bold text-foreground">&gt; {role.title}</h3>
             <div className="flex gap-2">
-              <span className="text-[10px] text-muted-foreground border border-border px-2 py-0.5">
+              <span className="text-[12px] text-muted-foreground border border-border px-2 py-0.5">
                 {role.type}
               </span>
-              <span className="text-[10px] text-muted-foreground border border-border px-2 py-0.5">
+              <span className="text-[12px] text-muted-foreground border border-border px-2 py-0.5">
                 {role.period}
               </span>
             </div>
@@ -260,10 +260,10 @@ const NextSection = () => (
             <div className="flex items-start justify-between flex-wrap gap-2 mb-1">
               <h3 className="text-sm font-bold text-foreground">&gt; {goal.title}</h3>
               <div className="flex gap-2">
-                <span className="text-[10px] text-primary border border-primary px-2 py-0.5">
+                <span className="text-[12px] text-primary border border-primary px-2 py-0.5">
                   {goal.type}
                 </span>
-                <span className="text-[10px] text-muted-foreground border border-border px-2 py-0.5">
+                <span className="text-[12px] text-muted-foreground border border-border px-2 py-0.5">
                   {goal.period}
                 </span>
               </div>
@@ -279,7 +279,7 @@ const NextSection = () => (
           </div>
         ))}
       </div>
-      <p className="text-[10px] text-muted-foreground text-center mt-10 animate-pulse">
+      <p className="text-[12px] text-muted-foreground text-center mt-10 animate-pulse">
         &gt; bookmark this page and check back as things develop _
       </p>
     </div>
@@ -366,10 +366,10 @@ const ProjectsSection = () => (
               )}
             </h3>
             <div className="flex gap-2 items-center">
-              <span className="text-[10px] text-muted-foreground border border-border px-2 py-0.5">
+              <span className="text-[12px] text-muted-foreground border border-border px-2 py-0.5">
                 {project.type}
               </span>
-              <span className={`text-[10px] px-2 py-0.5 border ${
+              <span className={`text-[12px] px-2 py-0.5 border ${
                 project.status === "In Progress"
                   ? "text-primary border-primary"
                   : project.status === "Live"
@@ -388,7 +388,7 @@ const ProjectsSection = () => (
           <p className="text-xs text-muted-foreground mb-3 leading-relaxed">{project.description}</p>
           <div className="flex flex-wrap gap-2">
             {project.stack.map((tech) => (
-              <span key={tech} className="text-[10px] text-foreground bg-secondary px-2 py-0.5 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">
+              <span key={tech} className="text-[12px] text-foreground bg-secondary px-2 py-0.5 hover:bg-primary hover:text-primary-foreground transition-colors cursor-default">
                 {tech}
               </span>
             ))}
@@ -431,10 +431,10 @@ const SkillsSection = () => (
             <div key={lang.name} className="space-y-1">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-foreground w-24">— {lang.name}</span>
-                <span className="font-mono text-[11px] tracking-widest text-foreground">
+                <span className="font-mono text-[13px] tracking-widest text-foreground">
                   {"█".repeat(lang.bars)}{"░".repeat(lang.total - lang.bars)}
                 </span>
-                <span className="text-[10px] text-muted-foreground w-24 text-right">{lang.level}</span>
+                <span className="text-[12px] text-muted-foreground w-24 text-right">{lang.level}</span>
               </div>
             </div>
           ))}
@@ -446,7 +446,7 @@ const SkillsSection = () => (
         <h3 className="text-sm font-bold text-foreground mb-4">&gt; Tools & Environments</h3>
         <div className="pl-4 flex flex-wrap gap-2">
           {tools.map((tool) => (
-            <span key={tool} className="text-[11px] text-muted-foreground border border-border px-3 py-1 hover:border-primary hover:text-foreground transition-colors">
+            <span key={tool} className="text-[13px] text-muted-foreground border border-border px-3 py-1 hover:border-primary hover:text-foreground transition-colors">
               {tool}
             </span>
           ))}
@@ -460,7 +460,7 @@ const SkillsSection = () => (
           {concepts.map((c) => (
             <div key={c.name} className="flex items-center justify-between border border-border px-3 py-2 hover:border-primary transition-colors">
               <span className="text-xs text-muted-foreground">— {c.name}</span>
-              <span className={`text-[10px] px-2 py-0.5 border ${
+              <span className={`text-[12px] px-2 py-0.5 border ${
                 c.status === "Learning"
                   ? "text-primary border-primary"
                   : "text-green-600 border-green-600"
@@ -519,13 +519,13 @@ const ContactSection = () => (
 const Footer = () => (
   <footer className="py-12 text-center space-y-4">
     <div className="border border-border max-w-md mx-auto px-6 py-4">
-      <p className="text-[10px] font-bold tracking-widest text-primary mb-2">// THIS IS JUST THE START</p>
-      <p className="text-[10px] text-muted-foreground leading-relaxed">
+      <p className="text-[12px] font-bold tracking-widest text-primary mb-2">// THIS IS JUST THE START</p>
+      <p className="text-[12px] text-muted-foreground leading-relaxed">
         This is my personal portfolio — a living document that grows as I do.
         More projects, awards, and experiences are in progress. Check back soon.
       </p>
     </div>
-    <p className="text-[10px] text-muted-foreground">
+    <p className="text-[12px] text-muted-foreground">
       © 2026 Panshul Vempalli — All Rights Reserved
     </p>
   </footer>
