@@ -545,13 +545,15 @@ const HeroSection = () => (
       </div>
 
       {/* ASCII name */}
-      <pre className="text-xs sm:text-sm leading-tight mb-4 text-foreground font-bold select-none whitespace-pre overflow-x-auto">
-{` ____ _   _ _  _ ____  _   _ _   _ _
-| _ \\  / \ | \\  | / ___|| | | | | | | |
-|| _  ) / _\\|  \\ | \\___ \\| |_| | | | | |
-   | __  / ___ \\ | \ \ | ___)  | |  _| |_| | |___
-  | _| /_/   \\_\\_| \\_|____/ |_| |_|\\___/|____|`}
-      </pre>
+<pre className="text-xs sm:text-sm leading-tight mb-4 text-foreground font-bold select-none whitespace-pre overflow-x-auto"
+  style={{ fontFamily: '"Courier New", Courier, monospace', lineHeight: '1.2', letterSpacing: '0em' }}>
+{` _____  ___  ____  _____ _   _ _   _ _     
+|  __ \\/ _ \\|  _ \\/ ____| | | | | | | |    
+| |__) / /_\\ \\ | | | (___ | |_| | | | | |   
+|  ___/|  _  | | | |\\___ \\|  _  | | | | |   
+| |    | | | | |_| |____) | | | | |_| | |____
+|_|    |_| |_|____/|_____/|_| |_|\\___/|______|`}
+</pre>
 
       <h1 className="text-2xl md:text-3xl font-bold tracking-wider mb-4">
         Panshul Vempalli
