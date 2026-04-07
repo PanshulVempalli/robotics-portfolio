@@ -889,7 +889,7 @@ const accolades = [
     type: "Competition",
     period: "2026",
     org: "VEX Robotics World Championship",
-    detail: "Qualified and competed at the VEX Robotics World Championship with Habs Gliders 34071B.",
+    detail: "Qualified and competed at the VEX Robotics World Championships with Habs Gliders 34071B.",
     icon: "⚡",
   },
   {
@@ -913,7 +913,7 @@ const accolades = [
     type: "Award",
     period: "2025",
     org: "Greenpower Education Trust",
-    detail: "Recognised for engineering documentation and team portfolio at regional competition level with Habs Gliders.",
+    detail: "Recognised for engineering documentation and team portfolio at regional competition level with Habs Powerstrike.",
     icon: "🏆",
   },
   {
@@ -921,7 +921,7 @@ const accolades = [
     type: "Award",
     period: "2024",
     org: "British Science Association",
-    detail: "Completed an team based STEM research project at Bronze level.",
+    detail: "Completed a team based STEM research project at Bronze level.",
     icon: "◆",
   },
 ];
