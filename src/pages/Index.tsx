@@ -599,7 +599,7 @@ const bgGlyphs = [
 ];
 
 const BackgroundGlyphs = () => (
-  <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
+  <div style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0, pointerEvents: "none" }}>
     {bgGlyphs.map((g, i) => (
       <span
         key={i}
@@ -664,7 +664,7 @@ const Index = () => {
       <SideNav />
       <MobileNav />
 
-      <div className="md:pl-48 lg:pl-56 relative" style={{ zIndex: 3 }}>
+      <div className="md:pl-48 lg:pl-56 relative" style={{ zIndex: 1 }}>
         <HeroSection />
         <AboutSection />
         <RolesSection />
