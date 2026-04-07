@@ -92,7 +92,7 @@ const ScrollProgress = () => {
 type TerminalEntry = { type: "cmd" | "out"; text: string };
 
 const INITIAL_HISTORY: TerminalEntry[] = [
-  { type: "out", text: 'Terminal v1.0 — type "help" for commands' },
+  { type: "out", text: 'R\u2022CONSOLE v1.0 — type "help" for commands' },
 ];
 
 const runCommand = (raw: string): TerminalEntry[] => {
