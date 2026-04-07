@@ -85,8 +85,8 @@ const HeroSection = () => (
           style={{
             fontSize: "clamp(3.2rem, 12vw, 8rem)",
             WebkitTextStroke: "2px hsl(32, 95%, 44%)",
-            color: "transparent",
-            textShadow: "0 0 60px hsl(32 95% 44% / 0.2)",
+            color: "hsl(32, 95%, 44%)",
+            textShadow: "0 0 60px hsl(32 95% 44% / 0.25)",
             fontFamily: "var(--font-mono)",
           }}
         >
