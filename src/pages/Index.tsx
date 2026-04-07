@@ -78,27 +78,14 @@ const HeroSection = () => (
         </a>
       </div>
 
-      {/* Name display */}
-      <div className="mb-6 select-none">
-        <div
-          className="font-black leading-none tracking-[0.18em] mb-2"
-          style={{
-            fontSize: "clamp(3.2rem, 12vw, 8rem)",
-            WebkitTextStroke: "2px hsl(32, 95%, 44%)",
-            color: "hsl(32, 95%, 44%)",
-            textShadow: "0 0 60px hsl(32 95% 44% / 0.25)",
-            fontFamily: "var(--font-mono)",
-          }}
-        >
-          PANSHUL
-        </div>
-        <div
-          className="font-bold tracking-[0.35em] text-muted-foreground"
-          style={{ fontSize: "clamp(0.9rem, 3vw, 1.4rem)", fontFamily: "var(--font-mono)" }}
-        >
-          VEMPALLI
-        </div>
-      </div>
+      {/* ASCII name */}
+      <pre className="text-xs sm:text-sm leading-tight mb-6 text-primary font-bold select-none whitespace-pre overflow-x-auto">
+{` ____     _      _   _   ____  _   _  _   _  _
+|  _ \\   / \\    | \\ | | / ___|| | | || | | || |
+| |_) | / _ \\   |  \\| | \\___ \\| |_| || | | || |
+|  __/ / ___ \\  | |\\  |  ___) ||  _  || |_| || |___
+|_|   /_/   \\_\\ |_| \\_| |____/ |_| |_| \\___/ |_____|`}
+      </pre>
 
       <div className="border-t border-border w-64 mx-auto mb-3" />
       <p className="text-sm text-muted-foreground">
