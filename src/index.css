@@ -81,20 +81,53 @@ html {
     background-size: 24px 24px, 26px 26px, 26px 26px;
   }
 
-  /* Scanline overlay for CRT texture */
+  /* Complex grid overlay */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 2;
-    background-image: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      hsl(263 40% 40% / 0.03) 3px,
-      hsl(263 40% 40% / 0.03) 4px
-    );
+    background-image:
+      /* Fine horizontal scanlines */
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        hsl(32 40% 40% / 0.03) 3px,
+        hsl(32 40% 40% / 0.03) 4px
+      ),
+      /* Bolder horizontal rule every 96px */
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 95px,
+        hsl(32 50% 40% / 0.07) 95px,
+        hsl(32 50% 40% / 0.07) 96px
+      ),
+      /* Vertical rule every 96px */
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 95px,
+        hsl(32 50% 40% / 0.05) 95px,
+        hsl(32 50% 40% / 0.05) 96px
+      ),
+      /* Subtle diagonal cross-hatch */
+      repeating-linear-gradient(
+        30deg,
+        transparent,
+        transparent 40px,
+        hsl(32 40% 40% / 0.018) 40px,
+        hsl(32 40% 40% / 0.018) 41px
+      ),
+      repeating-linear-gradient(
+        -30deg,
+        transparent,
+        transparent 40px,
+        hsl(32 40% 40% / 0.018) 40px,
+        hsl(32 40% 40% / 0.018) 41px
+      );
   }
 
   /* Vignette — darkens edges for depth */
