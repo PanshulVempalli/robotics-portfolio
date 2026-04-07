@@ -554,6 +554,31 @@ const HeroSection = () => (
 |_| /_/   \\_\\_| \\_||____/|_| |_| \\___/|_____|`}
 </pre>
 
+<h1 className="text-2xl md:text-3xl font-bold tracking-wider mb-4">
+  Panshul Vempalli
+</h1>
+
+<div className="border-t border-border w-64 mx-auto mb-3" />
+
+{/* Typing effect */}
+<p className="text-sm text-muted-foreground mb-6">
+  &gt; <TypingText />
+</p>
+
+<div className="border-t border-border w-64 mx-auto mt-3 mb-6" />
+
+{/* Tech stack badges */}
+<div className="flex flex-wrap justify-center gap-2 mb-8">
+  {["C++", "Python", "ROS2", "PROS", "React", "TypeScript", "OpenCV", "Git"].map((tech) => (
+    <span
+      key={tech}
+      className="text-xs border border-border px-3 py-1 text-muted-foreground hover:text-primary hover:border-primary transition-colors cursor-default font-mono"
+    >
+      {tech}
+    </span>
+  ))}
+</div>
+
       <h1 className="text-2xl md:text-3xl font-bold tracking-wider mb-4">
         Panshul Vempalli
       </h1>
