@@ -615,16 +615,7 @@ const HeroSection = () => (
   ))}
 </div>
 
-      <h1 className="text-2xl md:text-3xl font-bold tracking-wider mb-4">
-        Panshul Vempalli
-      </h1>
-
-      <div className="border-t border-border w-64 mx-auto mb-3" />
-      <p className="text-sm text-muted-foreground">
-        &gt; Aspiring Robotics & Visual Computing Engineer<span className="cursor-blink text-primary ml-0.5">_</span>
-      </p>
-      <div className="border-t border-border w-64 mx-auto mt-3" />
-
+    
       <button
         onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
         className="text-xs text-muted-foreground mt-8 animate-pulse hover:text-primary transition-colors cursor-pointer bg-transparent border-none"
