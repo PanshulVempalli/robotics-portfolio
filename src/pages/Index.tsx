@@ -893,6 +893,14 @@ const accolades = [
     icon: "⚡",
   },
   {
+    title: "Judges Award — VEX Worlds",
+    type: "Award",
+    period: "2026",
+    org: "VEX Robotics World Championship",
+    detail: "Awarded the Judges Award at VEX Worlds for outstanding design and team collaboration.",
+    icon: "🏆",
+  },
+  {
     title: "Regional Judges Award",
     type: "Award",
     period: "2026",
