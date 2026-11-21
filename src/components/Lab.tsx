@@ -3,8 +3,11 @@
  *  - TrussLab:     a live direct-stiffness truss solver (port of the idea behind Truss-Solver)
  *  - PidTuner:     a turning robot with adjustable PID gains (VEX autonomous)
  *  - CanSatFlight: a flight simulation using the PH8SED design numbers
+ *  - DigitNet:     digit-classifier-nn running in the browser (weights trained with his own NumPy code)
+ *  - FilterScope:  the moving-average filter from dsp-filter-designer, on a live scope
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import net from "@/data/digit-net.json";
 
 const INK = "#1d1f25";
 const PENCIL = "#6c6b66";
@@ -438,3 +441,276 @@ export const CanSatFlight = () => {
     </div>
   );
 };
+
+/* ── 4. Digit network: Panshul's from-scratch NN, weights trained with his own code ── */
+
+type Net = { acc: number; nTest: number; W1: number[][]; b1: number[]; W2: number[][]; b2: number[]; samples: Record<string, number[][]> };
+const NET = net as unknown as Net;
+
+function forward(x: number[]) {
+  const h = NET.b1.map((b, j) => Math.max(0, x.reduce((acc, xi, i) => acc + xi * NET.W1[i][j], b)));
+  const z = NET.b2.map((b, k) => h.reduce((acc, hj, j) => acc + hj * NET.W2[j][k], b));
+  const mx = Math.max(...z);
+  const e = z.map((v) => Math.exp(v - mx));
+  const s = e.reduce((a, b) => a + b, 0);
+  return { h, p: e.map((v) => v / s) };
+}
+
+/** Turn a hand drawing into the 8×8, 0–16 format of the scikit-learn digits (32×32 bitmap → 4×4 block counts). */
+function canvasTo8x8(c: HTMLCanvasElement): number[] | null {
+  const ctx = c.getContext("2d")!;
+  const { width: W, height: H } = c;
+  const img = ctx.getImageData(0, 0, W, H).data;
+  let x0 = W, y0 = H, x1 = -1, y1 = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (img[(y * W + x) * 4 + 3] > 40) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+  if (x1 < 0) return null;
+  const bw = x1 - x0 + 1, bh = y1 - y0 + 1;
+  const scale = 30 / Math.max(bw, bh);
+  const off = document.createElement("canvas");
+  off.width = 32; off.height = 32;
+  const o = off.getContext("2d")!;
+  o.imageSmoothingEnabled = true;
+  const dw = bw * scale, dh = bh * scale;
+  o.drawImage(c, x0, y0, bw, bh, (32 - dw) / 2, (32 - dh) / 2, dw, dh);
+  const d = o.getImageData(0, 0, 32, 32).data;
+  const out: number[] = [];
+  for (let by = 0; by < 8; by++) for (let bx = 0; bx < 8; bx++) {
+    let n = 0;
+    for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) if (d[((by * 4 + y) * 32 + bx * 4 + x) * 4 + 3] > 60) n++;
+    out.push(n);
+  }
+  return out;
+}
+
+export const DigitNet = () => {
+  const cv = useRef<HTMLCanvasElement | null>(null);
+  const drawing = useRef(false);
+  const last = useRef<[number, number] | null>(null);
+  const [pix, setPix] = useState<number[] | null>(null);
+  const [pulse, setPulse] = useState(0);
+  const sampleIdx = useRef(0);
+
+  const result = useMemo(() => (pix ? forward(pix.map((v) => v / 16)) : null), [pix]);
+  const pred = result ? result.p.indexOf(Math.max(...result.p)) : null;
+
+  const clear = () => {
+    const c = cv.current!;
+    c.getContext("2d")!.clearRect(0, 0, c.width, c.height);
+    setPix(null);
+  };
+  const update = () => {
+    const v = canvasTo8x8(cv.current!);
+    setPix(v);
+    setPulse((p) => p + 1);
+  };
+  const pos = (e: React.PointerEvent) => {
+    const r = cv.current!.getBoundingClientRect();
+    return [((e.clientX - r.left) / r.width) * cv.current!.width, ((e.clientY - r.top) / r.height) * cv.current!.height] as [number, number];
+  };
+  const down = (e: React.PointerEvent) => {
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    drawing.current = true;
+    last.current = pos(e);
+    move(e);
+  };
+  const move = (e: React.PointerEvent) => {
+    if (!drawing.current) return;
+    const ctx = cv.current!.getContext("2d")!;
+    const p = pos(e);
+    ctx.strokeStyle = INK;
+    ctx.lineWidth = 22;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(...(last.current ?? p));
+    ctx.lineTo(...p);
+    ctx.stroke();
+    last.current = p;
+  };
+  const up = () => {
+    if (!drawing.current) return;
+    drawing.current = false;
+    last.current = null;
+    update();
+  };
+  const loadSample = () => {
+    const digits = Object.keys(NET.samples);
+    const i = sampleIdx.current++ % (digits.length * 2);
+    const d = digits[i % digits.length];
+    const s = NET.samples[d][Math.floor(i / digits.length) % NET.samples[d].length];
+    const c = cv.current!;
+    const ctx = c.getContext("2d")!;
+    ctx.clearRect(0, 0, c.width, c.height);
+    const cell = c.width / 8;
+    s.forEach((v, k) => {
+      ctx.fillStyle = `rgba(29,31,37,${v / 16})`;
+      ctx.fillRect((k % 8) * cell, Math.floor(k / 8) * cell, cell, cell);
+    });
+    setPix(s);
+    setPulse((p) => p + 1);
+  };
+
+  // hidden layer & output geometry for the network diagram
+  const HX = 60, OX = 200, H = 260;
+  const hy = (j: number) => 12 + (j * (H - 24)) / 31;
+  const oy = (k: number) => 22 + (k * (H - 44)) / 9;
+  const hMax = result ? Math.max(...result.h, 1e-9) : 1;
+  const strongest = result && pred !== null
+    ? result.h.map((v, j) => ({ j, c: v * NET.W2[j][pred] })).sort((a, b) => b.c - a.c).slice(0, 7).map((o) => o.j)
+    : [];
+
+  return (
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_1.25fr] gap-4 items-start">
+        <div>
+          <div className="relative aspect-square max-w-[280px] sm:max-w-none mx-auto border-[1.5px] border-[var(--ink)] rounded-[3px] bg-white/70 touch-none" style={{ backgroundImage: "linear-gradient(rgba(31,79,191,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(31,79,191,.1) 1px,transparent 1px)", backgroundSize: "12.5% 12.5%" }}>
+            <canvas ref={cv} width={224} height={224} className="absolute inset-0 w-full h-full cursor-crosshair" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerLeave={up} aria-label="Drawing pad: draw a digit from 0 to 9" />
+            {!pix && <span className="absolute inset-0 grid place-items-center pointer-events-none hand text-[26px] text-[var(--ink-3)]">draw a digit here</span>}
+          </div>
+          <div className="flex gap-1.5 mt-2">
+            <button onClick={clear} className="mono text-[11px] h-8 px-3 rounded-[3px] border border-[var(--rule)] hover:border-[var(--ink)]">Clear</button>
+            <button onClick={loadSample} className="mono text-[11px] h-8 px-3 rounded-[3px] border border-[var(--rule)] hover:border-[var(--ink)]">Real scan ↻</button>
+          </div>
+          {/* what the network sees */}
+          <div className="flex items-center gap-3 mt-3">
+            <div className="grid grid-cols-8 w-[72px] h-[72px] shrink-0 border border-[var(--ink)]">
+              {Array.from({ length: 64 }).map((_, k) => (
+                <span key={k} style={{ background: `rgba(29,31,37,${(pix?.[k] ?? 0) / 16})`, transition: "background .3s" }} />
+              ))}
+            </div>
+            <p className="mono text-[10px] text-[var(--ink-3)] leading-snug">What the network sees: 64 pixels, 0–16, same format as the 1,797 scans it learned from.</p>
+          </div>
+        </div>
+
+        <div>
+          <svg viewBox={`0 0 260 ${H}`} className="w-full h-auto max-h-[280px] sm:max-h-none" role="img" aria-label="Network diagram: hidden neurons light up by activation; output bars show the probability of each digit">
+            {/* connections from strongest hidden neurons to the predicted digit */}
+            {pred !== null && strongest.map((j, i) => (
+              <line key={`${pulse}-${j}`} x1={HX} y1={hy(j)} x2={OX} y2={oy(pred)} stroke={RED} strokeOpacity="0.55" strokeWidth="1.3" strokeDasharray="200" strokeDashoffset="200" style={{ animation: `draw .7s ${0.25 + i * 0.05}s forwards` }} />
+            ))}
+            {/* input fan */}
+            {Array.from({ length: 8 }).map((_, i) => (
+              <line key={i} x1="4" y1={H / 2 - 40 + i * 11} x2={HX - 6} y2={hy(i * 4 + 2)} stroke={PENCIL} strokeOpacity="0.25" />
+            ))}
+            <text x="2" y={H / 2 - 50} fontFamily="IBM Plex Mono" fontSize="8" fill={PENCIL}>64 IN</text>
+            {/* hidden layer */}
+            {Array.from({ length: 32 }).map((_, j) => {
+              const a = result ? result.h[j] / hMax : 0;
+              return (
+                <circle key={`${pulse}-h${j}`} cx={HX} cy={hy(j)} r="3.6" fill={a > 0.02 ? `rgba(31,79,191,${0.15 + 0.85 * a})` : PAPER} stroke={INK} strokeWidth="0.9" style={{ transition: `fill .35s ${j * 8}ms` }} />
+              );
+            })}
+            <text x={HX - 22} y={H - 2} fontFamily="IBM Plex Mono" fontSize="8" fill={PENCIL}>32 HIDDEN · ReLU</text>
+            {/* outputs */}
+            {Array.from({ length: 10 }).map((_, k) => {
+              const p = result ? result.p[k] : 0;
+              const hot = k === pred;
+              return (
+                <g key={k}>
+                  <circle cx={OX} cy={oy(k)} r="7" fill={hot ? RED : PAPER} stroke={INK} strokeWidth="1.2" style={{ transition: "fill .3s .5s" }} />
+                  <text x={OX} y={oy(k) + 3.2} textAnchor="middle" fontFamily="IBM Plex Mono" fontSize="8.5" fill={hot ? "#fff" : INK}>{k}</text>
+                  <rect x={OX + 11} y={oy(k) - 3.5} width={Math.max(0.5, p * 44)} height="7" fill={hot ? RED : BLUE} fillOpacity={hot ? 0.9 : 0.35} style={{ transition: "width .4s .45s" }} />
+                </g>
+              );
+            })}
+          </svg>
+          <div className="flex items-end justify-between mt-1">
+            <div>
+              <div className="mono text-[10px] uppercase tracking-[0.1em] text-[var(--ink-3)]">Prediction</div>
+              <div className="serif text-[48px] leading-none text-[var(--red)] min-h-[48px]">{pred ?? "–"}</div>
+            </div>
+            <div className="text-right">
+              <div className="mono text-[10px] uppercase tracking-[0.1em] text-[var(--ink-3)]">Confidence</div>
+              <div className="mono text-[18px]">{result && pred !== null ? `${(result.p[pred] * 100).toFixed(1)}%` : "–"}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p className="mono text-[10px] text-[var(--ink-3)] mt-3">
+        64 → 32 (ReLU) → 10 (softmax). Weights trained with my own NumPy backprop code ({(NET.acc * 100).toFixed(1)}% on {NET.nTest} unseen scans), now running in your browser. Hand drawings are harder than the scans; that gap is exactly what my research is about.
+      </p>
+    </div>
+  );
+};
+
+/* ── 5. Moving-average filter scope (dsp-filter-designer) ─────────── */
+const gauss = (n: number) => {
+  // deterministic pseudo-random normal per sample index (Box–Muller on two hashes)
+  const h = (k: number) => { let x = Math.sin(k * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+  const u1 = Math.max(1e-9, h(n)), u2 = h(n + 7919);
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+};
+
+export const FilterScope = () => {
+  const [win, setWin] = useState(9);
+  const [noise, setNoise] = useState(0.35);
+  const [freq, setFreq] = useState(1);
+  const [off, setOff] = useState(0);
+  const { ref, inView } = useInViewLocal<HTMLDivElement>();
+  useEffect(() => {
+    if (!inView) return;
+    let raf = 0, lastT = performance.now(), acc = 0;
+    const step = (now: number) => {
+      acc += (now - lastT) / 10; // 100 samples per second
+      lastT = now;
+      if (acc >= 1) { setOff((o) => o + Math.floor(acc)); acc -= Math.floor(acc); }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [inView]);
+
+  const FS = 100, N = 300;
+  const clean = (n: number) => Math.sin((2 * Math.PI * freq * n) / FS);
+  const noisy = (n: number) => clean(n) + noise * gauss(n);
+  const idx = Array.from({ length: N }, (_, i) => off + i);
+  const raw = idx.map(noisy);
+  const filt = idx.map((n) => { let s = 0; for (let k = 0; k < win; k++) s += noisy(n - k); return s / win; });
+  const cl = idx.map(clean);
+  const rmse = (a: number[]) => Math.sqrt(a.reduce((s, v, i) => s + (v - cl[i]) ** 2, 0) / N);
+
+  const W = 360, H = 150;
+  const X = (i: number) => (i / (N - 1)) * W;
+  const Y = (v: number) => H / 2 - v * (H / 2 - 10) / 1.8;
+  const path = (a: number[]) => a.map((v, i) => `${i ? "L" : "M"} ${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(" ");
+  const rRaw = rmse(raw), rFilt = rmse(filt);
+  const tooBig = win > FS / freq / 3;
+
+  return (
+    <div ref={ref}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto rounded-[3px] border border-[var(--rule)] bg-white/50" role="img" aria-label="Oscilloscope: noisy sine wave in grey, filtered output in red, clean signal dashed blue">
+        {[0.25, 0.5, 0.75].map((f) => <line key={f} x1={W * f} y1="0" x2={W * f} y2={H} stroke={PENCIL} strokeOpacity="0.15" />)}
+        <line x1="0" y1={H / 2} x2={W} y2={H / 2} stroke={PENCIL} strokeOpacity="0.3" />
+        <path d={path(raw)} fill="none" stroke={PENCIL} strokeOpacity="0.45" strokeWidth="1" />
+        <path d={path(cl)} fill="none" stroke={BLUE} strokeWidth="1.3" strokeDasharray="5 4" />
+        <path d={path(filt)} fill="none" stroke={RED} strokeWidth="2.2" />
+      </svg>
+      <div className="grid grid-cols-3 gap-3 mt-3">
+        <Slider label="Window N" value={win} min={1} max={80} step={1} onChange={setWin} fmt={(v) => `${v}`} />
+        <Slider label="Noise σ" value={noise} min={0} max={1} step={0.05} onChange={setNoise} fmt={(v) => v.toFixed(2)} />
+        <Slider label="Signal" value={freq} min={0.5} max={4} step={0.5} onChange={setFreq} fmt={(v) => `${v} Hz`} />
+      </div>
+      <div className="flex flex-wrap items-center gap-2 mt-3">
+        <Readout k="RMSE noisy" v={rRaw.toFixed(3)} />
+        <Readout k="RMSE filtered" v={rFilt.toFixed(3)} hot={rFilt > rRaw} />
+        <span className={`hand text-[20px] ml-1 ${tooBig ? "text-[var(--red)]" : "text-[var(--blue)]"}`}>
+          {win === 1 ? "N = 1 does nothing" : tooBig ? "too big: it's smoothing away the signal!" : rFilt < rRaw ? "less noise ✓" : "hmm"}
+        </span>
+      </div>
+      <p className="mono text-[10px] text-[var(--ink-3)] mt-2">Each output is the average of the last N samples at 100 Hz, as in my dsp-filter-designer repo. Grey: noisy input. Blue: the true signal. Red: filtered.</p>
+    </div>
+  );
+};
+
+function useInViewLocal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.1 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return { ref, inView };
+}

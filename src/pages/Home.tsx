@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Reveal } from "@/components/Reveal";
 import { Circled, sheets } from "@/components/Layout";
 import { Figure, FieldSketch, RankSketch, GoodwoodSketch, CanSatSketch, QuantaSketch, HackSketch } from "@/components/Sketches";
-import { Tabbed, PidTuner, TrussLab, CanSatFlight } from "@/components/Lab";
+import { Tabbed, PidTuner, TrussLab, CanSatFlight, DigitNet, FilterScope } from "@/components/Lab";
 import { profile, skills } from "@/data/content";
 
 const currently = [
@@ -109,8 +109,9 @@ const entries: Entry[] = [
     body: "Funded by a school Research Scholarship, I'm reviewing how AI is used across civil and mechanical engineering, then testing one claim myself: training a neural network on my own truss solver's results and finding exactly where it breaks. Alongside it I'm shadowing a PhD student at Brunel University.",
     tags: ["Research Scholarship", "Brunel University", "AI × engineering"],
     note: "the big question",
-    fig: <TrussLab />,
-    caption: "Fig. 2 · Live truss solver · click a joint",
+    fig: <Tabbed caption="Fig. 2 · Both halves of my experiment" hint="← click a joint" tabs={[{ label: "Truss solver", node: <TrussLab /> }, { label: "Neural network", node: <DigitNet /> }]} />,
+    bare: true,
+    caption: "",
     link: { to: "/research", label: "Research notes" },
   },
   {
@@ -250,6 +251,32 @@ const Entries = () => (
   </section>
 );
 
+const Workbench = () => (
+  <section className="wrap py-16" id="workbench">
+    <div className="margin-line">
+      <Reveal className="flex flex-wrap items-end justify-between gap-4 mb-3">
+        <h2 className="h-display text-[44px] sm:text-[60px]">Workbench</h2>
+        <span className="red-pen -rotate-2">please touch the exhibits</span>
+      </Reveal>
+      <p className="body-copy max-w-2xl mb-10">Code from my GitHub, running live on this page. Nothing here is a video.</p>
+      <div className="grid lg:grid-cols-[1.25fr_1fr] gap-8 items-start">
+        <Figure caption="Bench 1 · digit-classifier-nn · draw a number" className="-rotate-[0.4deg]"><DigitNet /></Figure>
+        <div className="space-y-8">
+          <Figure caption="Bench 2 · dsp-filter-designer · live scope" className="rotate-[0.5deg]"><FilterScope /></Figure>
+          <div className="sheet p-5">
+            <p className="label mb-3">More on the bench</p>
+            <ul className="space-y-2 text-[14.5px]">
+              <li><Link to="/research" className="ink-link">Truss solver</Link> <span className="text-[var(--ink-3)]">· click a joint, watch the forces move</span></li>
+              <li><Link to="/projects#vex" className="ink-link">PID tuner</Link> <span className="text-[var(--ink-3)]">· tune a VEX turn</span></li>
+              <li><Link to="/projects#cansat" className="ink-link">CanSat flight</Link> <span className="text-[var(--ink-3)]">· launch it</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
 const BillOfMaterials = () => {
   const rows: [string, string, string][] = [
     ["01", "Programming", "Python, C++, JavaScript / TypeScript, HTML & CSS"],
@@ -318,6 +345,7 @@ const Home = () => (
     <Cover />
     <Contents />
     <Entries />
+    <Workbench />
     <BillOfMaterials />
     <SignOff />
   </>
