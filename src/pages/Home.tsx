@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import { Reveal } from "@/components/Reveal";
 import { Circled, sheets } from "@/components/Layout";
-import { Figure, FieldSketch, RankSketch, CarSketch, CanSatSketch, QuantaSketch, ResearchSketch } from "@/components/Sketches";
+import { Figure, FieldSketch, RankSketch, GoodwoodSketch, CanSatSketch, QuantaSketch, TrussSketch, HackSketch } from "@/components/Sketches";
 import { profile, skills } from "@/data/content";
 
 const currently = [
@@ -33,7 +33,7 @@ type Entry = {
 
 const entries: Entry[] = [
   {
-    no: "006",
+    no: "007",
     date: "2026",
     title: "Judges Award at the VEX Robotics World Championship",
     body: (
@@ -44,11 +44,11 @@ const entries: Entry[] = [
     tags: ["C++ / PROS", "PID control", "Autonomous routines", "Team founder"],
     note: "Worlds!! ✓",
     fig: <FieldSketch />,
-    caption: "Fig. 6 · Auton path, top view",
+    caption: "Fig. 7 · Skills route, Push Back field",
     link: { to: "/projects#vex", label: "See the robot code" },
   },
   {
-    no: "005",
+    no: "006",
     date: "2026",
     title: "Top-ranked VEX Virtual Robot programme in the UK",
     body: (
@@ -59,51 +59,67 @@ const entries: Entry[] = [
     tags: ["Python", "VEX VR", "Path planning"],
     note: "#1 UK",
     fig: <RankSketch />,
-    caption: "Fig. 5 · Rankings, 2026",
+    caption: "Fig. 6 · Rankings, 2026",
     link: { to: "/projects#vex", label: "VEX VR code" },
   },
   {
-    no: "004",
+    no: "005",
     date: "2025 →",
     title: "Founding Quanta, an AI-powered learning platform",
-    body: "I'm building an international, interactive learning platform from scratch and lead its software, design and user experience. On the side I ship live sites for student organisations and engineering teams, and I won High Honors at the Veritas AI International Hackathon (1,000+ projects, 75+ countries).",
+    body: "I'm building an international, interactive learning platform from scratch and lead its software, design and user experience. On the side I ship live sites for student organisations and engineering teams.",
     tags: ["TypeScript / React", "AI tools", "UX", "Founder"],
     note: "still building",
     fig: <QuantaSketch />,
-    caption: "Fig. 4 · Lesson screen wireframe",
+    caption: "Fig. 5 · Lesson screen wireframe",
     link: { to: "/projects#quanta", label: "Project sheet" },
+  },
+  {
+    no: "004",
+    date: "2025 – 26",
+    title: "Four hackathons, four working builds",
+    body: (
+      <>
+        High Honors at the <b className="text-[var(--ink)] font-semibold">Veritas AI International Hackathon</b> (1,000+ projects, 75+ countries) for a child-mortality forecasting model. Since then: GopherGhost for Kiroween 2026, which brings the 1991 Gopher protocol back to the modern web; PlateWise for STEMergent Hacks 2026, a school food-waste simulator built on a peer-reviewed study; and Professor Reverse, a study app where you teach the AI.
+      </>
+    ),
+    tags: ["Python", "TypeScript", "React", "Gemini API"],
+    note: "High Honors ★",
+    fig: <HackSketch />,
+    caption: "Fig. 4 · Hackathon log",
+    link: { to: "/projects#hackathons", label: "See the hackathon builds" },
   },
   {
     no: "003",
     date: "2024 – 25",
     title: "HABS Powerstrike: from founding to the International Finals",
-    body: "I founded the school's Greenpower electric racing team to leave a lasting engineering legacy. I worked on engineering, testing, documentation and race-day operations for our F24+ car. We won the Portfolio Award at Regionals and finished 25th at the 2025 International Finals.",
+    body: "I founded the school's Greenpower electric racing team to leave a lasting engineering legacy. I worked on engineering, testing, documentation and race-day operations for our F24+ car. We won the Portfolio Award at Regionals and finished 25th at the 2025 International Final at Goodwood.",
     tags: ["F24+", "Testing", "Documentation", "Founder"],
     note: "Portfolio Award",
-    fig: <CarSketch />,
-    caption: "Fig. 3 · Side elevation, F24+ car",
+    fig: <GoodwoodSketch />,
+    caption: "Fig. 3 · Goodwood Motor Circuit",
     link: { to: "/experience", label: "Experience" },
   },
   {
     no: "002",
     date: "Current",
     title: "Research: is AI redesigning engineering, or just making it faster?",
-    body: "Funded by a school Research Scholarship, I'm investigating whether AI changes how engineers design, or only speeds up the methods they already use. Alongside it I'm shadowing a PhD student at Brunel University.",
+    body: "Funded by a school Research Scholarship, I'm reviewing how AI is used across civil and mechanical engineering, then testing one claim myself: training a neural network on my own truss solver's results and finding exactly where it breaks. Alongside it I'm shadowing a PhD student at Brunel University.",
     tags: ["Research Scholarship", "Brunel University", "AI × engineering"],
     note: "the big question",
-    fig: <ResearchSketch />,
-    caption: "Fig. 2 · Framing the question",
+    fig: <TrussSketch />,
+    caption: "Fig. 2 · Truss-Solver output",
     link: { to: "/research", label: "Research notes" },
   },
   {
     no: "001",
     date: "2025 →",
-    title: "CanSat: a miniature satellite, with Arm",
-    body: "Developing a satellite system the size of a drinks can, with Arm engaged as an industry partner and further outreach ongoing. I've also done engineering project work with QinetiQ and Airobot Dynamics.",
-    tags: ["Embedded", "Sensors", "Industry partner"],
-    note: "in progress",
+    title: "CanSat: a satellite the size of a drinks can, with Arm",
+    body: "With Team PH8SED I'm building a CanSat for the UK CanSat Competition, with Arm as an industry partner. It streams temperature and pressure over LoRa once a second, and its secondary mission scores live wildfire fire-weather risk and sniffs for smoke plumes on the way down. Our Preliminary Design Review went in this month.",
+    tags: ["ESP32-S3 · C++", "LoRa telemetry", "Python ground station"],
+    note: "PDR submitted",
     fig: <CanSatSketch />,
-    caption: "Fig. 1 · Descent configuration",
+    caption: "Fig. 1 · PH8SED cassette, cutaway",
+    link: { to: "/projects#cansat", label: "Project sheet" },
   },
 ];
 
@@ -203,7 +219,7 @@ const Entries = () => (
     <div className="margin-line">
       <Reveal className="flex flex-wrap items-end justify-between gap-4 mb-10">
         <h2 id="entries-h" className="h-display text-[44px] sm:text-[60px]">Logbook entries</h2>
-        <span className="label">Newest first · 6 entries</span>
+        <span className="label">Selected · 7 entries</span>
       </Reveal>
 
       <div className="border-t-[1.5px] border-[var(--ink)]">

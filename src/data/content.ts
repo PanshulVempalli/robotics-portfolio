@@ -239,25 +239,19 @@ export const featuredProjects: Project[] = [
   },
   {
     slug: "cansat",
-    title: "CanSat",
-    kicker: "Miniature satellite · with Arm",
+    title: "CanSat · Team PH8SED",
+    kicker: "UK CanSat Competition · Software · with Arm",
     period: "2025 – Present",
     status: "In progress",
     description:
-      "Developing a miniature satellite system the size of a drinks can, with Arm engaged as an industry partner and further outreach ongoing.",
-    stack: ["Embedded", "Sensors", "Telemetry"],
-  },
-  {
-    slug: "veritas",
-    title: "Veritas AI Hackathon entry",
-    kicker: "International hackathon · High Honors",
-    period: "Hackathon",
-    status: "Award-winning",
-    description:
-      "My entry to the Veritas AI International High School Hackathon, which earned High Honors among 1,000+ projects from 75+ countries and a $1,250 scholarship.",
-    stack: ["Python", "AI"],
-    links: [{ label: "Repository", href: "https://github.com/PanshulVempalli/Veritas-AI-Hackathon" }],
-  },
+      "A satellite the size of a drinks can, built by a six-person team for the UK CanSat Competition, with Arm engaged as an industry partner. Our Preliminary Design Review was submitted in November 2026.",
+    points: [
+      "Primary mission: temperature and pressure at 1 Hz over LoRa, with altitude from the barometric formula and GPS as a cross-check",
+      "Secondary mission: a live wildfire fire-weather risk score, plus CO and SO₂ smoke-plume detection on descent",
+      "ESP32-S3 flight software in C++ with a five-state flight machine (boot, pad, ascent, descent, landed) and a Python ground-station dashboard",
+      "Ø65.4 × 114 mm tie-rod cassette, 343 g, 380 mm cross canopy for ≈ 10.5 m/s descent",
+    ],
+    stack: ["ESP32-S3", "C++", "LoRa 433 MHz", "Python", "PETG"],  },
   {
     slug: "habs-gliders-site",
     title: "Habs-Gliders team website",
@@ -294,13 +288,80 @@ export const miniProjects = [
   { title: "Digit Classifier NN", lang: "Python", href: "https://github.com/PanshulVempalli/digit-classifier-nn", note: "Neural networks" },
   { title: "UK Energy & Air Dashboard", lang: "Python", href: "https://github.com/PanshulVempalli/uk-energy-air-dashboard", note: "Data visualisation" },
   { title: "Study Helper API", lang: "Python", href: "https://github.com/PanshulVempalli/study-helper-api", note: "Backend API" },
-  { title: "Teach-Back", lang: "JavaScript", href: "https://github.com/PanshulVempalli/Teach-Back", note: "Learning tool" },
-  { title: "PlateWise", lang: "HTML", href: "https://github.com/PanshulVempalli/PlateWise", note: "Web app" },
-  { title: "Kiro Hackathon", lang: "TypeScript", href: "https://github.com/PanshulVempalli/Kiro_Hackathon", note: "Hackathon build" },
   { title: "Spanish Grammar GCSE Help", lang: "HTML", href: "https://github.com/PanshulVempalli/Spaniish-Grammar-GCSE-help", note: "Revision tool" },
   { title: "JAR Template Example", lang: "C++", href: "https://github.com/PanshulVempalli/JAR-template-Example-VEX-Code", note: "VEX PID example" },
   { title: "Python Skills Auton", lang: "Python", href: "https://github.com/PanshulVempalli/VEX-V5-Python-Skills-Auton-Example", note: "VEX example" },
   { title: "Prematch Auton Example", lang: "Python", href: "https://github.com/PanshulVempalli/VEX-V5-Prematch-Auton-Example-", note: "VEX example" },
+];
+
+
+export type Hackathon = {
+  event: string;
+  project: string;
+  result?: string;
+  summary: string;
+  points: string[];
+  stack: string[];
+  links: { label: string; href: string }[];
+};
+
+export const hackathons: Hackathon[] = [
+  {
+    event: "Veritas AI International High School Hackathon",
+    project: "Country risk forecasting",
+    result: "High Honors · $1,250 scholarship",
+    summary:
+      "A transparent forecasting pipeline that asks whether a country's income, schooling and health spending can predict its child mortality the following year.",
+    points: [
+      "Merges Our World in Data indicators, keeps individual countries and fills short gaps",
+      "Linear regression on year-on-year change, benchmarked against a naive 'same as last year' baseline",
+      "Recognised among 1,000+ projects from 75+ countries",
+    ],
+    stack: ["Python", "pandas", "scikit-learn"],
+    links: [{ label: "Repository", href: "https://github.com/PanshulVempalli/Veritas-AI-Hackathon" }],
+  },
+  {
+    event: "Kiroween 2026 · Resurrection category",
+    project: "GopherGhost",
+    summary:
+      "Brings the 1991 Gopher protocol (RFC 1436) back from the dead: paste any web address and get a clean, fast Gopher menu in a green-phosphor terminal, with ads and scripts stripped out.",
+    points: [
+      "Browses real gopher:// servers over TCP, with a bloat meter showing what was removed",
+      "SSRF guard blocks private addresses and re-checks redirects",
+      "Built spec-first in Kiro, with property-based tests (fast-check)",
+    ],
+    stack: ["TypeScript", "Node.js", "Vitest"],
+    links: [
+      { label: "Live demo", href: "https://gopherghost.onrender.com" },
+      { label: "Repository", href: "https://github.com/PanshulVempalli/Kiro_Hackathon" },
+    ],
+  },
+  {
+    event: "STEMergent Hacks 2026",
+    project: "PlateWise",
+    summary:
+      "A simulator that estimates how much lunch a school wastes and which changes are linked to less waste, built on the regression from a 2024 peer-reviewed PLOS ONE study.",
+    points: [
+      "What-if comparisons for lunch timing, length and milk service",
+      "Each change tagged strong or weak evidence by statistical significance",
+      "Audit tracker for a school's own before-and-after weigh-ins",
+    ],
+    stack: ["HTML", "JavaScript", "Statistics"],
+    links: [{ label: "Repository", href: "https://github.com/PanshulVempalli/PlateWise" }],
+  },
+  {
+    event: "Devpost hackathon entry",
+    project: "Professor Reverse",
+    summary:
+      "A study app where you teach the AI. Explain a topic to Sam, a confused student, and he asks questions exactly where your explanation was vague or wrong.",
+    points: [
+      "Gemini grades each explanation against your notes, then Sam replies to the biggest gap",
+      "Every third turn Sam repeats back a subtly wrong version for you to catch",
+      "Ends with a gap report and a quiz built from your own misconceptions",
+    ],
+    stack: ["React", "Vite", "GSAP", "Gemini API"],
+    links: [{ label: "Repository", href: "https://github.com/PanshulVempalli/Teach-Back" }],
+  },
 ];
 
 export type Role = {
@@ -350,7 +411,7 @@ export const roles: Role[] = [
     period: "2025 – Present",
     kind: "Industry",
     points: [
-      "Arm engaged as industry partner on our CanSat project",
+      "Arm engaged as industry partner on our CanSat (Team PH8SED) project",
       "Engineering project work with QinetiQ (defence and security technology) and Airobot Dynamics (UK UAV manufacturer)",
     ],
   },
@@ -400,20 +461,49 @@ export const roles: Role[] = [
 export const research = {
   question: "Is AI redesigning engineering, or just making it faster?",
   intro:
-    "Supported by a school Research Scholarship, this project examines whether AI is changing how engineers design, or only speeding up the methods they already use.",
+    "Supported by a school Research Scholarship, this project reviews how AI and machine learning are used across civil and mechanical engineering, then tests one claim myself: can a neural network trained on a solver's results replace the solver, and where does it break?",
+  framing:
+    "Engineering is not a field where a confident wrong answer is acceptable. A mistake in a film recommendation can be passed over; a mistake in a bridge support cannot. So the interesting question isn't \u201cwill AI replace engineers?\u201d but where it can be trusted, and where it can't.",
+  areas: ["Planning", "Sketching & concept design", "CAD & generative design", "Simulation", "Physics"],
   strands: [
     {
-      title: "The question",
-      body: "When an engineer uses AI, is the design itself different, or is the same design reached sooner? The distinction matters for how we train engineers and what we expect from the tools.",
+      title: "Review the field",
+      body: "Survey AI and ML across five stages of engineering, from construction scheduling and generative CAD (DeepCAD, Fusion 360 Gallery) to surrogate models, physics-informed neural networks (PINNs) and neural operators.",
     },
     {
-      title: "What redesign would look like",
-      body: "Signs that AI opens up new design spaces: generative and optimised forms, options a person wouldn't have explored, and changes to who makes which decisions.",
+      title: "Build a surrogate model",
+      body: "Use my own truss solver to generate data, including statically indeterminate trusses, then train a neural network to predict deflection and stress.",
     },
     {
-      title: "What 'just faster' would look like",
-      body: "Signs that AI mainly compresses existing workflows: faster drafting, simulation and documentation, with the underlying design process unchanged.",
+      title: "Find where it breaks",
+      body: "Compare accuracy and speed against the solver, and test on cases outside the training range, paying the most attention to the failures.",
     },
+  ],
+  preliminary: [
+    {
+      title: "Truss-Solver",
+      href: "https://github.com/PanshulVempalli/Truss-Solver",
+      body: "A 2D truss analysis program in Python using the direct stiffness method, written without an existing package. It matches the method of joints to within 1e-6, passes four automated tests, and has analysed an 8 m Warren footbridge.",
+      stat: "1e-6",
+      statLabel: "agreement with hand method",
+    },
+    {
+      title: "digit-classifier-nn",
+      href: "https://github.com/PanshulVempalli/digit-classifier-nn",
+      body: "A neural network written from scratch in NumPy, with forward propagation, backpropagation and gradient descent coded by hand and checked with gradient checking.",
+      stat: "\u224897%",
+      statLabel: "accuracy on 359 unseen digits",
+    },
+  ],
+  timeline: [
+    { months: "1\u20132", phase: "Foundations: statics, beam bending, FEM; regression and PyTorch" },
+    { months: "2\u20133", phase: "Planning: ML for scheduling, cost and risk, BIM and digital twins" },
+    { months: "3\u20134", phase: "Sketching: sketch-to-3D and generative image models" },
+    { months: "4\u20135", phase: "CAD: generative design and topology optimisation in Python" },
+    { months: "5\u20137", phase: "Simulation: surrogates, PINNs, neural operators, graph networks" },
+    { months: "6\u20139", phase: "Experiment: surrogate model vs my solver, out-of-range tests" },
+    { months: "9\u201310", phase: "Evaluation: reliability, the black-box problem, liability, standards" },
+    { months: "11\u201312", phase: "Write-up, reflection and submission" },
   ],
   experience: [
     {

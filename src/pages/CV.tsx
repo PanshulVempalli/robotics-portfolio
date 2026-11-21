@@ -91,8 +91,14 @@ const CV = () => (
       <Item title="VEX Virtual Robot programme" sub="Team 34071B Habs-Gliders" meta="2026">
         <L>Built the top-ranked VEX Virtual Robot programme in the UK across Middle and High School, ranking 11th globally in Middle School</L>
       </Item>
-      <Item title="CanSat Project" sub="Working with Arm" meta="2025 – Present">
+      <Item title="CanSat Project" sub="UK CanSat Competition · Team PH8SED · Working with Arm" meta="2025 – Present">
         <L>Developing a miniature satellite system, with Arm engaged as an industry partner and further outreach ongoing</L>
+        <L>ESP32-S3 flight software streaming 1 Hz LoRa telemetry, with a secondary wildfire fire-weather and smoke-detection mission; Preliminary Design Review submitted November 2026</L>
+      </Item>
+      <Item title="Hackathons">
+        <L>Kiroween 2026 (Resurrection category): GopherGhost, converting modern web pages into Gopher menus</L>
+        <L>STEMergent Hacks 2026: PlateWise, a school food-waste simulator built on a peer-reviewed regression model</L>
+        <L>Professor Reverse: a study app where students teach an AI that probes the gaps in their explanation</L>
       </Item>
       <Item title="GitHub & Web Development" sub="github.com/PanshulVempalli">
         <L>660+ followers; portfolio of live projects, including my personal site and websites built for student organisations and engineering teams</L>

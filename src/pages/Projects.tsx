@@ -1,7 +1,7 @@
 import { SheetHeader } from "@/components/Layout";
 import { Reveal } from "@/components/Reveal";
 import { Figure, FieldSketch, QuantaSketch, CanSatSketch } from "@/components/Sketches";
-import { featuredProjects, miniProjects, profile, type Project } from "@/data/content";
+import { featuredProjects, miniProjects, hackathons, profile, type Project } from "@/data/content";
 
 const figs: Record<string, JSX.Element> = {
   quanta: <QuantaSketch />,
@@ -62,8 +62,46 @@ const Projects = () => {
           <Reveal><ProjectSheet p={a} n={1} wide /></Reveal>
           <Reveal><ProjectSheet p={b} n={2} wide /></Reveal>
           <Reveal><ProjectSheet p={c} n={3} wide /></Reveal>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             {rest.map((p, i) => <Reveal key={p.slug} delay={i * 70}><ProjectSheet p={p} n={i + 4} /></Reveal>)}
+          </div>
+        </div>
+      </section>
+
+      <section id="hackathons" className="wrap mt-24 scroll-mt-24">
+        <div className="margin-line">
+          <Reveal className="flex flex-wrap items-end justify-between gap-4 mb-8">
+            <div>
+              <p className="label mb-3">Competition entries</p>
+              <h2 className="h-display text-[40px] sm:text-[54px]">Hackathons</h2>
+            </div>
+            <span className="red-pen -rotate-2">4 entered, 4 shipped</span>
+          </Reveal>
+          <div className="grid md:grid-cols-2 gap-6">
+            {hackathons.map((h, i) => (
+              <Reveal key={h.project} delay={(i % 2) * 80} className="sheet flex flex-col">
+                <div className="p-6 sm:p-7 flex-1">
+                  <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+                    <span className="mono text-[11px] uppercase tracking-[0.12em] text-[var(--ink-3)]">Entry H-{String(i + 1).padStart(2, "0")}</span>
+                    {h.result ? <span className="stamp">{h.result}</span> : <span className="stamp" style={{ color: "#1f4fbf", borderColor: "#1f4fbf" }}>Submitted</span>}
+                  </div>
+                  <h3 className="serif text-[30px] leading-tight tracking-[-0.015em]">{h.project}</h3>
+                  <p className="text-[14px] text-[var(--blue)] mt-1">{h.event}</p>
+                  <p className="body-copy !text-[15px] mt-4">{h.summary}</p>
+                  <ul className="mt-4 space-y-2">
+                    {h.points.map((pt) => (
+                      <li key={pt} className="flex gap-3 text-[14px] text-[var(--ink-2)]"><span className="text-[var(--red)] mono">→</span>{pt}</li>
+                    ))}
+                  </ul>
+                  <div className="flex flex-wrap gap-x-5 gap-y-2 mt-6">
+                    {h.links.map((l) => <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="ink-link mono text-[13px]">{l.label} ↗</a>)}
+                  </div>
+                </div>
+                <div className="title-block !border-x-0 !border-b-0">
+                  <div><div className="tb-k">Built with</div><div className="tb-v">{h.stack.join(" · ")}</div></div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
