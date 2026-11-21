@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { ArrowUpRight, Command as CommandIcon, Menu, X, Github, Mail, FileText, Copy, Home, Trophy, FolderGit2, Briefcase, FlaskConical, User } from "lucide-react";
+import { Github, Mail, FileText, Copy, Home, Trophy, FolderGit2, Briefcase, FlaskConical, User, X } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -12,120 +12,118 @@ import {
 } from "@/components/ui/command";
 import { profile } from "@/data/content";
 
-export const navLinks = [
-  { to: "/about", label: "About", icon: User },
-  { to: "/achievements", label: "Achievements", icon: Trophy },
-  { to: "/projects", label: "Projects", icon: FolderGit2 },
-  { to: "/experience", label: "Experience", icon: Briefcase },
-  { to: "/research", label: "Research", icon: FlaskConical },
-  { to: "/cv", label: "CV", icon: FileText },
+export const sheets = [
+  { to: "/", label: "Home", short: "Home", icon: Home, tab: "#f7f2e4" },
+  { to: "/about", label: "About", short: "About", icon: User, tab: "#fbe68a" },
+  { to: "/achievements", label: "Achievements", short: "Results", icon: Trophy, tab: "#f6c7bf" },
+  { to: "/projects", label: "Projects", short: "Projects", icon: FolderGit2, tab: "#c9dbf5" },
+  { to: "/experience", label: "Experience", short: "Experience", icon: Briefcase, tab: "#cfe6c8" },
+  { to: "/research", label: "Research", short: "Research", icon: FlaskConical, tab: "#ddd2f0" },
+  { to: "/cv", label: "CV", short: "CV", icon: FileText, tab: "#ffffff" },
 ];
 
-const Monogram = () => (
-  <span className="relative grid place-items-center h-8 w-8 rounded-[10px] bg-[#15171d] border border-white/10 overflow-hidden">
-    <span className="absolute inset-0 opacity-70" style={{ background: "var(--grad)", maskImage: "linear-gradient(135deg,#000 0%,transparent 70%)", WebkitMaskImage: "linear-gradient(135deg,#000 0%,transparent 70%)" }} />
-    <span className="relative font-[var(--display)] text-[13px] font-bold tracking-tight text-white" style={{ fontFamily: "var(--display)" }}>PV</span>
+export const sheetNo = (path: string) => {
+  const i = sheets.findIndex((s) => s.to === path);
+  return i < 0 ? "—" : String(i + 1).padStart(2, "0");
+};
+
+/** Hand-drawn red circle to wrap a phrase */
+export const Circled = ({ children, delay = 0.6 }: { children: ReactNode; delay?: number }) => (
+  <span className="circled">
+    {children}
+    <svg viewBox="0 0 200 60" preserveAspectRatio="none" aria-hidden className="draw in">
+      <path d="M 18 34 C 10 10, 120 2, 182 16 C 206 24, 196 52, 120 56 C 60 60, 4 50, 10 30 C 14 18, 40 10, 70 9" fill="none" stroke="#cf3a2b" strokeWidth="2.2" strokeLinecap="round" style={{ ["--len" as string]: 560, ["--dd" as string]: `${delay}s` }} vectorEffect="non-scaling-stroke" />
+    </svg>
   </span>
 );
 
-const ScrollProgress = () => {
-  const [p, setP] = useState(0);
-  useEffect(() => {
-    const on = () => {
-      const t = document.documentElement.scrollHeight - innerHeight;
-      setP(t > 0 ? scrollY / t : 0);
-    };
-    on();
-    addEventListener("scroll", on, { passive: true });
-    return () => removeEventListener("scroll", on);
-  }, []);
+const TopStrip = ({ onPalette, onMenu }: { onPalette: () => void; onMenu: () => void }) => {
+  const { pathname } = useLocation();
   return (
-    <div className="no-print fixed top-0 left-0 right-0 h-[2px] z-[60] pointer-events-none">
-      <div className="h-full origin-left" style={{ transform: `scaleX(${p})`, background: "var(--grad)" }} />
-    </div>
+    <header className="no-print relative z-40 border-b-[1.5px] border-[var(--ink)] bg-[var(--paper)]/90 backdrop-blur-[2px]">
+      <div className="wrap h-14 flex items-center justify-between gap-4">
+        <Link to="/" className="flex items-baseline gap-3 min-w-0" aria-label="Home">
+          <span className="serif text-[21px] font-semibold tracking-tight whitespace-nowrap">P. Vempalli</span>
+          <span className="hidden sm:inline label truncate">Engineering logbook · Vol. 04</span>
+        </Link>
+
+        <nav className="hidden lg:flex xl:hidden items-center gap-5" aria-label="Main">
+          {sheets.slice(1).map((s) => (
+            <NavLink key={s.to} to={s.to} className={({ isActive }) => `mono text-[12.5px] ${isActive ? "text-[var(--red)] underline decoration-2 underline-offset-[6px]" : "text-[var(--ink-2)] hover:text-[var(--ink)]"}`}>
+              {s.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="hidden md:inline label">Sheet {sheetNo(pathname)} / 07</span>
+          <button onClick={onPalette} className="hidden md:inline-flex mono text-[11.5px] h-8 px-2.5 border border-[var(--rule)] rounded-[3px] text-[var(--ink-2)] hover:border-[var(--ink)] hover:text-[var(--ink)] bg-white/40" aria-label="Open command menu">
+            ⌘K
+          </button>
+          <a href={`mailto:${profile.email}`} className="hidden sm:inline-flex mono text-[12.5px] h-8 items-center px-3 bg-[var(--ink)] text-[var(--paper)] rounded-[3px]">
+            Contact
+          </a>
+          <button onClick={onMenu} className="lg:hidden mono text-[12.5px] h-9 px-3 border-[1.5px] border-[var(--ink)] rounded-[3px] bg-white/50" aria-label="Open contents">
+            Contents
+          </button>
+        </div>
+      </div>
+    </header>
   );
 };
 
-const Nav = ({ onPalette }: { onPalette: () => void }) => {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const loc = useLocation();
-
-  useEffect(() => setOpen(false), [loc.pathname]);
-  useEffect(() => {
-    const on = () => setScrolled(scrollY > 12);
-    on();
-    addEventListener("scroll", on, { passive: true });
-    return () => removeEventListener("scroll", on);
-  }, []);
-
-  return (
-    <header className="no-print fixed top-3 left-0 right-0 z-50 px-3">
-      <nav
-        className={`mx-auto max-w-[1180px] flex items-center justify-between gap-3 h-[56px] pl-3 pr-2 rounded-2xl border transition-all duration-300 ${
-          scrolled || open ? "bg-[#0b0c10]/80 border-white/10 backdrop-blur-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.7)]" : "bg-transparent border-transparent"
-        }`}
-        aria-label="Main"
+/** Notebook index tabs sticking out of the right edge (wide screens) */
+const IndexTabs = () => (
+  <nav className="no-print hidden xl:flex fixed right-0 top-1/2 -translate-y-1/2 z-40 flex-col gap-1.5" aria-label="Sections">
+    {sheets.map((s, i) => (
+      <NavLink
+        key={s.to}
+        to={s.to}
+        end={s.to === "/"}
+        className={({ isActive }) =>
+          `group relative block w-[46px] h-[104px] rounded-l-[6px] border border-r-0 border-[rgba(23,24,28,0.22)] transition-transform duration-200 shadow-[-2px_2px_0_rgba(0,0,0,0.05)] ${
+            isActive ? "-translate-x-3" : "hover:-translate-x-1.5"
+          }`
+        }
+        style={{ background: s.tab }}
       >
-        <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="Home">
-          <Monogram />
-          <span className="hidden sm:block text-[12px] tracking-[0.24em] uppercase text-white/90 font-medium">Panshul Vempalli</span>
-        </Link>
+        {({ isActive }) => (
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className={`mono text-[11px] tracking-[0.12em] uppercase whitespace-nowrap -rotate-90 ${isActive ? "text-[var(--red)] font-semibold" : "text-[var(--ink-2)]"}`}>
+              {String(i + 1).padStart(2, "0")} {s.short}
+            </span>
+          </span>
+        )}
+      </NavLink>
+    ))}
+  </nav>
+);
 
-        <ul className="hidden lg:flex items-center gap-1">
-          {navLinks.map((l) => (
-            <li key={l.to}>
-              <NavLink
-                to={l.to}
-                className={({ isActive }) =>
-                  `px-3 py-2 rounded-full text-[13.5px] transition-colors ${isActive ? "text-white bg-white/[0.07]" : "text-white/60 hover:text-white"}`
-                }
-              >
-                {l.label}
+const ContentsSheet = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+  if (!open) return null;
+  return (
+    <div className="no-print fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Contents">
+      <div className="absolute inset-0 bg-[rgba(23,24,28,0.35)]" onClick={onClose} />
+      <div className="absolute right-3 left-3 top-3 sheet p-5 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="flex items-center justify-between mb-4">
+          <span className="serif text-[26px] font-semibold">Contents</span>
+          <button onClick={onClose} aria-label="Close" className="h-9 w-9 grid place-items-center border border-[var(--rule)] rounded-[3px]"><X className="h-4 w-4" /></button>
+        </div>
+        <ol>
+          {sheets.map((s, i) => (
+            <li key={s.to}>
+              <NavLink to={s.to} end={s.to === "/"} onClick={onClose} className={({ isActive }) => `flex items-end py-2.5 ${isActive ? "text-[var(--red)]" : ""}`}>
+                <span className="mono text-[12px] w-8 text-[var(--ink-3)]">{String(i + 1).padStart(2, "0")}</span>
+                <span className="serif text-[21px]">{s.label}</span>
+                <span className="leader" />
+                <span className="mono text-[12px] text-[var(--ink-3)]">p.{i + 1}</span>
               </NavLink>
             </li>
           ))}
-        </ul>
-
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={onPalette}
-            className="hidden md:inline-flex items-center gap-2 h-9 px-3 rounded-full border border-white/10 text-white/60 hover:text-white hover:bg-white/5 text-[12.5px] transition-colors"
-            aria-label="Open command menu"
-          >
-            <CommandIcon className="h-3.5 w-3.5" />
-            <span className="font-mono text-[11px]">K</span>
-          </button>
-          <a href={`mailto:${profile.email}`} className="hidden sm:inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-white text-black text-[13px] font-semibold hover:bg-white/90 transition-colors">
-            Contact <ArrowUpRight className="h-3.5 w-3.5" />
-          </a>
-          <button
-            className="lg:hidden grid place-items-center h-10 w-10 rounded-full border border-white/10 text-white/80"
-            onClick={() => setOpen((o) => !o)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-          >
-            {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </button>
-        </div>
-      </nav>
-
-      {open && (
-        <div className="lg:hidden mx-auto max-w-[1180px] mt-2 rounded-2xl border border-white/10 bg-[#0b0c10]/95 backdrop-blur-xl p-2 animate-in fade-in slide-in-from-top-2 duration-200">
-          <NavLink to="/" end className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] ${isActive ? "bg-white/[0.07] text-white" : "text-white/70"}`}>
-            <Home className="h-4 w-4 opacity-60" /> Home
-          </NavLink>
-          {navLinks.map((l) => (
-            <NavLink key={l.to} to={l.to} className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] ${isActive ? "bg-white/[0.07] text-white" : "text-white/70"}`}>
-              <l.icon className="h-4 w-4 opacity-60" /> {l.label}
-            </NavLink>
-          ))}
-          <a href={`mailto:${profile.email}`} className="flex items-center justify-center gap-2 mt-2 h-12 rounded-xl bg-white text-black font-semibold">
-            Email me <ArrowUpRight className="h-4 w-4" />
-          </a>
-        </div>
-      )}
-    </header>
+        </ol>
+        <a href={`mailto:${profile.email}`} className="btn-ink w-full justify-center mt-5">Email me</a>
+      </div>
+    </div>
   );
 };
 
@@ -138,16 +136,13 @@ const Palette = ({ open, setOpen }: { open: boolean; setOpen: (o: boolean) => vo
   };
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Jump to a page, copy my email, open GitHub…" />
+      <CommandInput placeholder="Turn to a page, copy my email, open GitHub…" />
       <CommandList>
         <CommandEmpty>No results.</CommandEmpty>
         <CommandGroup heading="Pages">
-          <CommandItem onSelect={() => go(() => nav("/"))}>
-            <Home className="mr-2 h-4 w-4" /> Home
-          </CommandItem>
-          {navLinks.map((l) => (
-            <CommandItem key={l.to} onSelect={() => go(() => nav(l.to))}>
-              <l.icon className="mr-2 h-4 w-4" /> {l.label}
+          {sheets.map((s) => (
+            <CommandItem key={s.to} onSelect={() => go(() => nav(s.to))}>
+              <s.icon className="mr-2 h-4 w-4" /> {s.label}
             </CommandItem>
           ))}
         </CommandGroup>
@@ -178,48 +173,46 @@ const Palette = ({ open, setOpen }: { open: boolean; setOpen: (o: boolean) => vo
   );
 };
 
-const Footer = () => (
-  <footer className="no-print border-t border-white/[0.06] mt-20">
-    <div className="wrap py-14 grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
-      <div>
-        <div className="flex items-center gap-2.5 mb-4">
-          <Monogram />
-          <span className="text-[12px] tracking-[0.24em] uppercase text-white/90 font-medium">Panshul Vempalli</span>
+const Footer = () => {
+  const { pathname } = useLocation();
+  const today = new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit", year: "numeric" });
+  return (
+    <footer className="no-print mt-24 pb-12">
+      <div className="wrap">
+        <div className="title-block grid-cols-2 md:grid-cols-[1.6fr_1fr_1fr_1fr] [&>div]:border-[var(--ink)] [&>div]:border-r [&>div]:border-b">
+          <div className="col-span-2 md:col-span-1 md:row-span-2 !p-4 flex flex-col justify-between gap-4">
+            <div>
+              <div className="tb-k">Title</div>
+              <div className="serif text-[26px] leading-none mt-2 tracking-tight">Panshul Vempalli</div>
+              <div className="text-[12px] text-[var(--ink-2)] mt-2">Engineering logbook · London</div>
+            </div>
+            <div className="hand text-[30px] text-[var(--blue)] leading-none -rotate-2 origin-left">P. Vempalli</div>
+          </div>
+          <div><div className="tb-k">Drawn by</div><div className="tb-v">P. Vempalli</div></div>
+          <div><div className="tb-k">Checked</div><div className="tb-v text-[var(--red)]">✓ verified</div></div>
+          <div><div className="tb-k">Sheet</div><div className="tb-v">{sheetNo(pathname)} of 07</div></div>
+          <div><div className="tb-k">Date</div><div className="tb-v">{today}</div></div>
+          <div className="md:col-span-2"><div className="tb-k">Contact</div><a className="tb-v block break-all hover:text-[var(--blue)]" href={`mailto:${profile.email}`}>{profile.email}</a></div>
+          <div className="col-span-2 md:col-span-4 flex flex-wrap gap-x-6 gap-y-2 !py-3">
+            {sheets.map((s) => (
+              <Link key={s.to} to={s.to} className="text-[12px] text-[var(--ink-2)] hover:text-[var(--red)]">{s.label}</Link>
+            ))}
+            <a href={profile.github} target="_blank" rel="noreferrer" className="text-[12px] text-[var(--ink-2)] hover:text-[var(--red)] md:ml-auto">github.com/{profile.githubHandle} ↗</a>
+          </div>
         </div>
-        <p className="text-[14px] text-[var(--text-2)] max-w-sm leading-relaxed">
-          Student engineer at Haberdashers' Boys' School, London. Open to university conversations, work experience and technical collaborations.
-        </p>
+        <p className="label mt-4 !normal-case !tracking-normal">© {new Date().getFullYear()} Panshul Vempalli. Scale 1:1. Do not measure from screen.</p>
       </div>
-      <div>
-        <p className="eyebrow mb-4">Explore</p>
-        <ul className="grid grid-cols-2 gap-y-2 text-[14px]">
-          {navLinks.map((l) => (
-            <li key={l.to}>
-              <Link to={l.to} className="text-white/60 hover:text-white transition-colors">{l.label}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <p className="eyebrow mb-4">Contact</p>
-        <ul className="space-y-2 text-[14px]">
-          <li><a className="text-white/60 hover:text-white transition-colors break-all" href={`mailto:${profile.email}`}>{profile.email}</a></li>
-          <li><a className="text-white/60 hover:text-white transition-colors" href={profile.github} target="_blank" rel="noreferrer">github.com/{profile.githubHandle}</a></li>
-        </ul>
-      </div>
-    </div>
-    <div className="wrap pb-10 flex flex-wrap items-center justify-between gap-3 text-[12.5px] text-white/35">
-      <span>© {new Date().getFullYear()} Panshul Vempalli</span>
-      <span className="hidden md:inline">Press <kbd className="font-mono px-1.5 py-0.5 rounded border border-white/15 text-white/60">⌘ K</kbd> to navigate anywhere</span>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [palette, setPalette] = useState(false);
+  const [menu, setMenu] = useState(false);
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
+    setMenu(false);
     if (hash) {
       const el = document.getElementById(hash.slice(1));
       if (el) {
@@ -243,9 +236,10 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:text-black focus:px-3 focus:py-2 focus:rounded">Skip to content</a>
-      <ScrollProgress />
-      <Nav onPalette={() => setPalette(true)} />
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
+      <TopStrip onPalette={() => setPalette(true)} onMenu={() => setMenu(true)} />
+      <IndexTabs />
+      <ContentsSheet open={menu} onClose={() => setMenu(false)} />
       <main id="main" className="flex-1">{children}</main>
       <Footer />
       <Palette open={palette} setOpen={setPalette} />
@@ -253,22 +247,17 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const PageHeader = ({ eyebrow, title, accent, children }: { eyebrow: string; title: string; accent?: string; children?: ReactNode }) => (
-  <section className="relative pt-36 md:pt-44 pb-14 md:pb-20 overflow-hidden">
-    <div className="absolute inset-0 grid-bg" aria-hidden />
-    <div className="glow" style={{ width: 520, height: 320, top: -80, left: "8%", background: "rgba(255,122,61,0.22)" }} aria-hidden />
-    <div className="wrap relative">
-      <p className="eyebrow mb-6 animate-in fade-in duration-700">{eyebrow}</p>
-      <h1 className="display text-[44px] sm:text-[64px] md:text-[80px] max-w-4xl animate-in fade-in slide-in-from-bottom-3 duration-700">
-        <span className="dim-text">{title}</span>
-        {accent && (
-          <>
-            {" "}
-            <span className="grad-text">{accent}</span>
-          </>
-        )}
-      </h1>
-      {children && <div className="lede max-w-2xl mt-7 animate-in fade-in duration-1000">{children}</div>}
+/** Page opener: sheet label, serif title, red-pen note */
+export const SheetHeader = ({ no, title, note, children }: { no: string; title: ReactNode; note?: string; children?: ReactNode }) => (
+  <section className="wrap pt-14 md:pt-20 pb-10 md:pb-14">
+    <div className="margin-line">
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <span className="label">Sheet {no}</span>
+        <span className="h-px w-10 bg-[var(--ink)]" />
+        {note && <span className="red-pen text-[22px] -rotate-2">{note}</span>}
+      </div>
+      <h1 className="h-display text-[48px] sm:text-[68px] md:text-[84px] max-w-4xl">{title}</h1>
+      {children && <div className="body-copy text-[17.5px] max-w-2xl mt-6">{children}</div>}
     </div>
   </section>
 );

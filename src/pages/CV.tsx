@@ -3,7 +3,7 @@ import { Download, Mail, Github, Globe } from "lucide-react";
 import { profile, education, research, skills } from "@/data/content";
 
 const H = ({ children }: { children: ReactNode }) => (
-  <h2 className="flex items-center gap-3 text-[11px] font-semibold tracking-[0.2em] uppercase text-[#c2410c] mt-8 mb-3">
+  <h2 className="flex items-center gap-3 text-[11px] font-semibold tracking-[0.2em] uppercase text-[#cf3a2b] mt-8 mb-3">
     {children}
     <span className="flex-1 h-px bg-[#e7e2da]" />
   </h2>
@@ -33,27 +33,27 @@ const awards: [string, string][] = [
 ];
 
 const CV = () => (
-  <div className="pt-28 pb-10 md:pt-32 print:pt-0">
+  <div className="pt-12 pb-10 md:pt-16 print:pt-0">
     <div className="no-print wrap max-w-[860px] flex flex-wrap items-center justify-between gap-4 mb-6">
       <div>
-        <p className="eyebrow">Curriculum vitae</p>
-        <p className="text-[14px] text-white/50 mt-1">Always up to date. Print or save as PDF for an A4 copy.</p>
+        <p className="label">Sheet 07 · Curriculum vitae</p>
+        <p className="text-[14px] text-[var(--ink-2)] mt-1">Always up to date. Print or save as PDF for an A4 copy.</p>
       </div>
-      <button onClick={() => window.print()} className="btn btn-primary">
+      <button onClick={() => window.print()} className="btn-ink">
         <Download className="h-4 w-4" /> Download PDF
       </button>
     </div>
 
-    <article className="print-sheet mx-auto max-w-[860px] bg-[#fbfaf7] text-[#111] rounded-[18px] shadow-[0_40px_120px_-40px_rgba(255,138,61,0.35)] px-6 py-9 sm:px-12 sm:py-12 mx-4 sm:mx-auto" style={{ fontFamily: "var(--body)" }}>
+    <article className="print-sheet mx-auto max-w-[860px] sheet text-[#111] px-6 py-9 sm:px-12 sm:py-12 mx-4 sm:mx-auto" style={{ fontFamily: "var(--body)" }}>
       <header className="flex flex-wrap items-end justify-between gap-6 pb-6 border-b-2 border-[#111]">
         <div>
-          <h1 className="text-[34px] sm:text-[40px] font-semibold tracking-[-0.03em] leading-none" style={{ fontFamily: "var(--display)" }}>{profile.name}</h1>
+          <h1 className="text-[34px] sm:text-[40px] font-semibold tracking-[-0.03em] leading-none" style={{ fontFamily: "var(--serif)" }}>{profile.name}</h1>
           <p className="text-[13.5px] text-[#555] mt-2">Student engineer · Robotics, software and AI research · London</p>
         </div>
         <ul className="text-[12.5px] text-[#333] space-y-1 sm:text-right">
-          <li><a href={`mailto:${profile.email}`} className="inline-flex items-center gap-1.5 hover:text-[#c2410c]"><Mail className="h-3.5 w-3.5 no-print" />{profile.email}</a></li>
-          <li><a href={profile.github} className="inline-flex items-center gap-1.5 hover:text-[#c2410c]"><Github className="h-3.5 w-3.5 no-print" />github.com/{profile.githubHandle}</a></li>
-          <li><a href={`https://${profile.site}`} className="inline-flex items-center gap-1.5 hover:text-[#c2410c]"><Globe className="h-3.5 w-3.5 no-print" />{profile.site}</a></li>
+          <li><a href={`mailto:${profile.email}`} className="inline-flex items-center gap-1.5 hover:text-[#cf3a2b]"><Mail className="h-3.5 w-3.5 no-print" />{profile.email}</a></li>
+          <li><a href={profile.github} className="inline-flex items-center gap-1.5 hover:text-[#cf3a2b]"><Github className="h-3.5 w-3.5 no-print" />github.com/{profile.githubHandle}</a></li>
+          <li><a href={`https://${profile.site}`} className="inline-flex items-center gap-1.5 hover:text-[#cf3a2b]"><Globe className="h-3.5 w-3.5 no-print" />{profile.site}</a></li>
         </ul>
       </header>
 
