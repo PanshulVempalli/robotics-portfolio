@@ -1,6 +1,7 @@
 import { SheetHeader } from "@/components/Layout";
 import { Reveal } from "@/components/Reveal";
-import { Figure, ResearchSketch, TrussSketch } from "@/components/Sketches";
+import { Figure, ResearchSketch } from "@/components/Sketches";
+import { TrussLab } from "@/components/Lab";
 import { research } from "@/data/content";
 
 const Research = () => (
@@ -74,7 +75,7 @@ const Research = () => (
             </Reveal>
           </div>
           <Reveal delay={120}>
-            <Figure caption="Fig. R2 · Truss-Solver: 8 m Warren footbridge" className="rotate-[0.6deg]"><TrussSketch /></Figure>
+            <Figure caption="Fig. R2 · Live truss solver · click a joint"><TrussLab /></Figure>
           </Reveal>
         </div>
       </div>

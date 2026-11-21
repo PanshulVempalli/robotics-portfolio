@@ -1,12 +1,13 @@
 import { SheetHeader } from "@/components/Layout";
 import { Reveal } from "@/components/Reveal";
-import { Figure, FieldSketch, QuantaSketch, CanSatSketch } from "@/components/Sketches";
+import { Figure, QuantaSketch } from "@/components/Sketches";
+import { PidTuner, CanSatFlight } from "@/components/Lab";
 import { featuredProjects, miniProjects, hackathons, profile, type Project } from "@/data/content";
 
 const figs: Record<string, JSX.Element> = {
   quanta: <QuantaSketch />,
-  vex: <FieldSketch />,
-  cansat: <CanSatSketch />,
+  vex: <PidTuner />,
+  cansat: <CanSatFlight />,
 };
 
 const statusColor: Record<Project["status"], string> = {
@@ -39,7 +40,7 @@ const ProjectSheet = ({ p, n, wide }: { p: Project; n: number; wide?: boolean })
           </div>
         )}
       </div>
-      {wide && figs[p.slug] && <Figure caption={`Fig. ${n} · ${p.title}`} className="rotate-[0.6deg]">{figs[p.slug]}</Figure>}
+      {wide && figs[p.slug] && <Figure caption={`Fig. ${n} · ${p.title}`} >{figs[p.slug]}</Figure>}
     </div>
     <div className="title-block !border-x-0 !border-b-0 grid-cols-[1.4fr_1fr_0.6fr] [&>div:not(:last-child)]:border-r [&>div]:border-[var(--ink)]">
       <div><div className="tb-k">Stack</div><div className="tb-v truncate">{p.stack.join(" · ")}</div></div>

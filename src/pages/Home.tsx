@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import { Reveal } from "@/components/Reveal";
 import { Circled, sheets } from "@/components/Layout";
-import { Figure, FieldSketch, RankSketch, GoodwoodSketch, CanSatSketch, QuantaSketch, TrussSketch, HackSketch } from "@/components/Sketches";
+import { Figure, FieldSketch, RankSketch, GoodwoodSketch, CanSatSketch, QuantaSketch, HackSketch } from "@/components/Sketches";
+import { Tabbed, PidTuner, TrussLab, CanSatFlight } from "@/components/Lab";
 import { profile, skills } from "@/data/content";
 
 const currently = [
@@ -29,6 +30,7 @@ type Entry = {
   fig: ReactNode;
   caption: string;
   link?: { to: string; label: string };
+  bare?: boolean;
 };
 
 const entries: Entry[] = [
@@ -43,8 +45,9 @@ const entries: Entry[] = [
     ),
     tags: ["C++ / PROS", "PID control", "Autonomous routines", "Team founder"],
     note: "Worlds!! ✓",
-    fig: <FieldSketch />,
-    caption: "Fig. 7 · Skills route, Push Back field",
+    fig: <Tabbed caption="Fig. 7 · Push Back field" hint="← try tuning it" tabs={[{ label: "Skills route", node: <FieldSketch /> }, { label: "Tune my PID", node: <PidTuner /> }]} />,
+    bare: true,
+    caption: "",
     link: { to: "/projects#vex", label: "See the robot code" },
   },
   {
@@ -106,8 +109,8 @@ const entries: Entry[] = [
     body: "Funded by a school Research Scholarship, I'm reviewing how AI is used across civil and mechanical engineering, then testing one claim myself: training a neural network on my own truss solver's results and finding exactly where it breaks. Alongside it I'm shadowing a PhD student at Brunel University.",
     tags: ["Research Scholarship", "Brunel University", "AI × engineering"],
     note: "the big question",
-    fig: <TrussSketch />,
-    caption: "Fig. 2 · Truss-Solver output",
+    fig: <TrussLab />,
+    caption: "Fig. 2 · Live truss solver · click a joint",
     link: { to: "/research", label: "Research notes" },
   },
   {
@@ -117,8 +120,9 @@ const entries: Entry[] = [
     body: "With Team PH8SED I'm building a CanSat for the UK CanSat Competition, with Arm as an industry partner. It streams temperature and pressure over LoRa once a second, and its secondary mission scores live wildfire fire-weather risk and sniffs for smoke plumes on the way down. Our Preliminary Design Review went in this month.",
     tags: ["ESP32-S3 · C++", "LoRa telemetry", "Python ground station"],
     note: "PDR submitted",
-    fig: <CanSatSketch />,
-    caption: "Fig. 1 · PH8SED cassette, cutaway",
+    fig: <Tabbed caption="Fig. 1 · PH8SED CanSat" hint="← launch it" tabs={[{ label: "Cutaway", node: <CanSatSketch /> }, { label: "Fly it", node: <CanSatFlight /> }]} />,
+    bare: true,
+    caption: "",
     link: { to: "/projects#cansat", label: "Project sheet" },
   },
 ];
@@ -133,7 +137,7 @@ const Cover = () => (
           <span className="label">Haberdashers' Boys' School · London</span>
         </div>
 
-        <h1 className="h-display text-[58px] sm:text-[92px] md:text-[112px] animate-in fade-in duration-700">
+        <h1 className="h-display text-[58px] sm:text-[92px] md:text-[112px]">
           Panshul
           <br />
           Vempalli<span className="text-[var(--red)]">.</span>
@@ -237,7 +241,7 @@ const Entries = () => (
               {e.link && <Link to={e.link.to} className="ink-link mono text-[13px] inline-block mt-6">{e.link.label} →</Link>}
             </Reveal>
             <Reveal delay={120} className={`md:col-start-2 lg:col-start-auto ${i % 2 ? "lg:rotate-[0.8deg]" : "lg:-rotate-[0.8deg]"}`}>
-              <Figure caption={e.caption}>{e.fig}</Figure>
+              {e.bare ? e.fig : <Figure caption={e.caption}>{e.fig}</Figure>}
             </Reveal>
           </article>
         ))}
