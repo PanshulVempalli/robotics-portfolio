@@ -473,3 +473,78 @@ export const HackSketch = () => {
     </div>
   );
 };
+
+/* ── Chennai → London, 2005 ─────────────────────────────────────── */
+const JOURNEY = "M 330 196 C 300 110, 200 52, 62 62";
+
+export const JourneySketch = () => {
+  const { ref, inView } = useInView<HTMLDivElement>();
+  const [t, setT] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    let raf = 0;
+    const start = performance.now() + 900;
+    const loop = (now: number) => {
+      const f = Math.max(0, Math.min(1, (now - start) / 4200));
+      setT(1 - (1 - f) ** 3);
+      if (f < 1) raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [inView]);
+
+  return (
+    <div ref={ref} className="relative">
+      <svg viewBox="0 0 380 240" className={`w-full h-auto draw ${inView ? "in" : ""}`} fill="none" role="img" aria-label="Sketch of the journey from Chennai to London in 2005">
+        <defs><Wobble id="wob-journey" /></defs>
+        {/* faint latitude lines */}
+        {[40, 90, 140, 190].map((y) => <line key={y} x1="10" y1={y} x2="370" y2={y} stroke={PENCIL} strokeOpacity="0.18" strokeDasharray="2 6" className="no-draw" style={{ ["--dash" as string]: "2 6" }} />)}
+        <g filter="url(#wob-journey)" strokeLinecap="round">
+          <path d={JOURNEY} stroke={RED} strokeWidth="2" style={len(360, 0.3)} />
+          <circle cx="330" cy="196" r="6" stroke={INK} strokeWidth="2" fill="#faf8f2" style={len(40)} />
+          <circle cx="62" cy="62" r="6" stroke={INK} strokeWidth="2" fill="#faf8f2" style={len(40, 2.6)} />
+        </g>
+        <g fontFamily="Newsreader" fontSize="20" fill={INK}>
+          <text x="372" y="226" textAnchor="end">Chennai</text>
+          <text x="40" y="44">London</text>
+        </g>
+        <g fontFamily="IBM Plex Mono" fontSize="9" fill={PENCIL} letterSpacing="1">
+          <text x="372" y="238" textAnchor="end">13.08° N · 80.27° E</text>
+          <text x="40" y="84">51.51° N · 0.13° W</text>
+          <text x="150" y="196" fill={BLUE}>≈ 8,200 km</text>
+        </g>
+        <g fontFamily="Caveat" fill={RED} opacity={inView ? 1 : 0} style={{ transition: "opacity .8s 2.8s" }}>
+          <text x="128" y="124" fontSize="30">2005</text>
+          <text x="140" y="152" fontSize="26">£200</text>
+        </g>
+      </svg>
+      {/* the plane */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute left-0 top-0 origin-top-left"
+          style={{ width: 380, height: 240 }}
+          ref={(el) => {
+            if (!el?.parentElement) return;
+            el.style.transform = `scale(${el.parentElement.clientWidth / 380})`;
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              offsetPath: `path("${JOURNEY}")`,
+              offsetDistance: `${t * 100}%`,
+              offsetRotate: "auto",
+              opacity: inView && t > 0 && t < 0.995 ? 1 : 0,
+              transition: "opacity .4s",
+              fontSize: 16,
+              lineHeight: 1,
+              color: INK,
+            } as CSSProperties}
+          >
+            <svg width="20" height="20" viewBox="-10 -10 20 20" aria-hidden><path d="M 8 0 L -6 -2 L -8 -7 L -10 -7 L -8 0 L -10 7 L -8 7 L -6 2 Z M 0 -1.5 L -3 -9 L -1 -9 L 4 -1.5 Z M 0 1.5 L -3 9 L -1 9 L 4 1.5 Z" fill={INK} /></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

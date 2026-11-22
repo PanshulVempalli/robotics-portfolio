@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { SheetHeader } from "@/components/Layout";
 import { Reveal } from "@/components/Reveal";
+import { Figure, JourneySketch } from "@/components/Sketches";
 import { education, skills, profile } from "@/data/content";
 
 const principles = [
   { t: "Build the real thing", b: "A robot either scores or it doesn't. I like work that gets tested on a field, a track or by real users." },
-  { t: "Leave something behind", b: "I founded teams so they'd outlast me: the first mixed VEX team at Habs, and a Greenpower team built to last." },
+  { t: "Start with what you have", b: "My dad started with £200. I founded teams with nothing in place: the first mixed VEX team at Habs, and a Greenpower team built to outlast me." },
   { t: "Teach what I learn", b: "I mentor VEX IQ and V5 teams, co-lead the AI & ML Society and coach younger debaters." },
 ];
 
@@ -56,6 +57,39 @@ const About = () => (
           </div>
           <p className="red-pen -rotate-1 ml-2">↑ the spec sheet</p>
         </Reveal>
+      </div>
+    </section>
+
+    <section className="wrap mt-24" id="roots">
+      <div className="margin-line">
+        <Reveal className="flex flex-wrap items-baseline gap-4 mb-10 pb-4 border-b-[1.5px] border-[var(--ink)]">
+          <h2 className="h-display text-[40px] sm:text-[54px]">Where I come from</h2>
+          <span className="red-pen -rotate-2">the first entry in the logbook</span>
+        </Reveal>
+        <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-start">
+          <Reveal className="space-y-6">
+            <p className="serif text-[26px] leading-[1.4]">
+              In 2005 my dad moved from Chennai to the UK with <span className="text-[var(--red)]">£200</span>. I'm the first generation of my family to grow up here.
+            </p>
+            <div className="body-copy space-y-5">
+              <p>
+                That's the starting condition for everything else on this site. He arrived with almost nothing and built a life from it, which is why I can be at Haberdashers', build robots and spend my evenings on research.
+              </p>
+              <p>
+                It's also where my habit of starting things from scratch comes from. When there was no mixed VEX team at Habs, I started one. When the school had no Greenpower team, I founded HABS Powerstrike. When I couldn't find a decent A-level guide, I built one. I'm used to the idea that you don't wait for the right conditions; you start with what you have and make it work.
+              </p>
+              <p>
+                At home there are two cultures side by side: I speak Telugu with family and English everywhere else. Growing up between them taught me to switch perspectives quickly, which turns out to be useful when you're explaining a robot to judges one minute and debugging it with teammates the next.
+              </p>
+              <p>
+                I don't take any of it for granted. £200 doesn't go far, and every opportunity I've had sits on top of the risk he took.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={100}>
+            <Figure caption="Fig. 0 · Chennai → London, 2005" className="rotate-[0.6deg]"><JourneySketch /></Figure>
+          </Reveal>
+        </div>
       </div>
     </section>
 
